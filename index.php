@@ -10,7 +10,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
     Side effect -> No error logging. :/ 
   */
   'hooks' => [
-    // CREATE STRIPE USER
+    // CREATE STRIPE USER -----------------------------------------------------------------------------------------
     'user.create:after' => function ($user) {
 
       try {
@@ -30,9 +30,21 @@ Kirby::plugin('kreativ-anders/stripekit', [
         // LOG ERROR SOMEWHERE !!!
       }
     },
-    // CHANGE STRIPE USER EMAIL
+    // CHANGE STRIPE USER EMAIL -------------------------------------------------------------------------------------
     'user.changeEmail:after' => function ($newUser, $oldUser) {
-      // your code goes here
+
+      try {
+
+        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
+        $stripe->customers->update(
+          $oldUser->stripe_customer(),
+          ['email' => $newUser->email()]
+        );
+
+      } catch(Exception $e) {
+      
+        // LOG ERROR SOMEWHERE !!!
+      }
     },
     // UPDATE STRIPE USER SUBSCRIPTION (FREE TIER!!!)
     'user.update:after' => function ($newUser, $oldUser) {
