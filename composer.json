@@ -1,0 +1,15 @@
+{
+  "name": "kreativ-anders/stripekit",
+  "description": "Stripe Plugin",
+  "type": "kirby-plugin",
+  "license": "MIT",
+  "authors": [
+      {
+          "name": "Manuel Steinberg",
+          "email": "you@example.com"
+      }
+  ],
+  "require": {
+      "getkirby/composer-installer": "^1.1"
+  }
+}
