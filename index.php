@@ -4,9 +4,13 @@
 Kirby::plugin('kreativ-anders/stripekit', [
   'options' => [
     'privateKey' => 'sk_test_xxx',
-    'tier1' => 'price_xxx',
-    'tier2' => null,
-    'tier3' => null
+    'publicKey' => 'pk_test_xxx',
+    'checkoutSlag' => 'checkout',
+    'succuessURL' => '../success',
+    'cancelURL' => '../cancel',
+    'free' => 'FREE',
+    'basic' => 'BASIC',
+    'premium' => 'PREMIUM'
   ],
 
   /* 
@@ -28,10 +32,10 @@ Kirby::plugin('kreativ-anders/stripekit', [
           'email' => $user->email()
         ]);
 
-        // UPDATE KIRBY USER
+        // UPDATE KIRBY USER - FREE TIER
         $user->update([
           'stripe_customer' => $customer->id,
-          'stripe_subscription' => false
+          'tier' => option('kreativ-anders.stripekit.free')
         ]);
 
       } catch(Exception $e) {
@@ -76,6 +80,33 @@ Kirby::plugin('kreativ-anders/stripekit', [
   ],
 
   /*
+    API
+    ----------
+    https://getkirby.com/docs/reference/plugins/extensions/api
+
+  */
+
+  // BASIC TIER
+  'routes' => function ($kirby) {
+    return [
+      [
+        'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/' . Str::lower(option('kreativ-anders.stripekit.basic')) . '/(:all)/(:all)/(:all)/(:all)',
+        'test' => option('kreativ-anders.stripekit.checkoutSlag'),
+        'action' => function ($url, $url2, $hallo, $ho) {
+
+          // STRIPE CHECKOUT SESSION
+          $id = $url;
+          
+
+          return [
+            'id' => $id
+          ];
+        }
+      ]
+    ];
+  },
+
+  /*
     EXTENSIONS
     ----------
     https://getkirby.com/docs/reference/plugins/extensions/user-methods
@@ -89,39 +120,47 @@ Kirby::plugin('kreativ-anders/stripekit', [
 
       // CHECK USER SUBSCRIPTIONS
       if ($this->stripe_subscription() || $this->stripe_subscription() == '') {
+        
+        try {
+
+          // STRIPE CHECKOUT SESSION
+          $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
+          $checkout = $stripe->checkout->sessions->create([
+            'success_url' => 'https://example.com/success',
+            'cancel_url' => 'https://example.com/cancel',
+            'payment_method_types' => ['card'],
+            'line_items' => [
+              [
+                'price' => $price,
+                'quantity' => 1,
+              ],
+            ],
+            'mode' => 'subscription',
+            'customer' => $this->stripe_customer(),
+          ]);
+  
+          // UPDATE KIRBY USER
+          $this->update([
+            'stripe_subscription' => $checkout->id
+          ]);
+  
+        } catch(Exception $e) {
+        
+          // LOG ERROR SOMEWHERE !!!
+
+          $checkout = $e;
+        }
+      }
+      else {
         return $this->stripe_subscription();
       }
 
-      try {
-
-        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
-        $subscription = $stripe->subscriptions->create([
-          'customer' => $this->stripe_customer(),
-          'items' => [
-            ['price' => $price],
-          ],
-        ]);
-
-        // UPDATE KIRBY USER
-        $this->update([
-          'stripe_subscription' => $subscription->id
-        ]);
-
-      } catch(Exception $e) {
-      
-        // LOG ERROR SOMEWHERE !!!
-      }
-
-      return $subscription;
+      return $checkout;
     },
 
     // DOWNGRADE OR UPGRADE SUBSCRIPTION
 
     // CANCEL SUBSCRIPTION
-    'fullname' => function () {
-        // provided there are firstname and lastname fields in the user blueprints
-        return $this->firstname() . ' ' . $this->lastname();
-    }
   ]
 ]);
 
