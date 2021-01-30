@@ -6,7 +6,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
     'privateKey' => 'sk_test_xxx',
     'publicKey' => 'pk_test_xxx',
     'checkoutSlag' => 'checkout',
-    'succuessURL' => '../success',
+    'successURL' => '../success',
     'cancelURL' => '../cancel',
     'free' => 'FREE',
     'basic' => 'BASIC',
@@ -96,6 +96,10 @@ Kirby::plugin('kreativ-anders/stripekit', [
 
           // STRIPE CHECKOUT SESSION
           $id = $url;
+          $successURL = option('kreativ-anders.stripekit.successURL');
+          $cancelURL = option('kreativ-anders.stripekit.cancelURL');
+
+          $id = $successURL . '/' . $cancelURL;
           
 
           return [
