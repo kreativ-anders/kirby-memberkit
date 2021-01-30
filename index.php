@@ -10,7 +10,9 @@ Kirby::plugin('kreativ-anders/stripekit', [
     'cancelURL' => '../cancel',
     'free' => 'FREE',
     'basic' => 'BASIC',
-    'premium' => 'PREMIUM'
+    'basicPrice' => 'price_xxxx',
+    'premium' => 'PREMIUM',
+    'premiumPrice' => 'price_xxxx',
   ],
 
   /* 
@@ -90,82 +92,49 @@ Kirby::plugin('kreativ-anders/stripekit', [
   'routes' => function ($kirby) {
     return [
       [
-        'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/' . Str::lower(option('kreativ-anders.stripekit.basic')) . '/(:all)/(:all)/(:all)/(:all)',
+        // PATTERN --> CHECKOUT SLAG / BASIC TIER NAME / STRIPE CUSTOMER / BASIC TIER PRICE
+        'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/' . Str::lower(option('kreativ-anders.stripekit.basic')) . '/(:all)/(:all)',
         'test' => option('kreativ-anders.stripekit.checkoutSlag'),
-        'action' => function ($url, $url2, $hallo, $ho) {
+        'action' => function ($user, $price) {
+
+          try {
+
+            // STRIPE CHECKOUT SESSION
+            $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
+            $checkout = $stripe->checkout->sessions->create([
+              'success_url' => option('kreativ-anders.stripekit.successURL'),
+              'cancel_url' => option('kreativ-anders.stripekit.cancelURL'),
+              'payment_method_types' => ['card'],
+              'line_items' => [
+                [
+                  'price' => base64_decode($price),
+                  'quantity' => 1,
+                ],
+              ],
+              'mode' => 'subscription',
+              'customer' => base64_decode($user),
+            ]);
+        
+          } catch(Exception $e) {
+          
+            // LOG ERROR SOMEWHERE !!!
+          }
 
           // STRIPE CHECKOUT SESSION
-          $id = $url;
           $successURL = option('kreativ-anders.stripekit.successURL');
-          $cancelURL = option('kreativ-anders.stripekit.cancelURL');
-
-          $id = $successURL . '/' . $cancelURL;
-          
+          $cancelURL = option('kreativ-anders.stripekit.cancelURL');         
 
           return [
-            'id' => $id
+            'user' => base64_decode($user),
+            'successURL' => $successURL,
+            'cancelURL' => $cancelURL,
+            'price' => base64_decode($price),
+            'id' => $checkout->id,
           ];
         }
       ]
     ];
   },
-
-  /*
-    EXTENSIONS
-    ----------
-    https://getkirby.com/docs/reference/plugins/extensions/user-methods
-
-  */
-
-  'userMethods' => [
-    // START SUBSCRIPTION
-    // https://stripe.com/docs/api/subscriptions/create
-    'stripeSubscripe' => function ($price) {
-
-      // CHECK USER SUBSCRIPTIONS
-      if ($this->stripe_subscription() || $this->stripe_subscription() == '') {
-        
-        try {
-
-          // STRIPE CHECKOUT SESSION
-          $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
-          $checkout = $stripe->checkout->sessions->create([
-            'success_url' => 'https://example.com/success',
-            'cancel_url' => 'https://example.com/cancel',
-            'payment_method_types' => ['card'],
-            'line_items' => [
-              [
-                'price' => $price,
-                'quantity' => 1,
-              ],
-            ],
-            'mode' => 'subscription',
-            'customer' => $this->stripe_customer(),
-          ]);
-  
-          // UPDATE KIRBY USER
-          $this->update([
-            'stripe_subscription' => $checkout->id
-          ]);
-  
-        } catch(Exception $e) {
-        
-          // LOG ERROR SOMEWHERE !!!
-
-          $checkout = $e;
-        }
-      }
-      else {
-        return $this->stripe_subscription();
-      }
-
-      return $checkout;
-    },
-
-    // DOWNGRADE OR UPGRADE SUBSCRIPTION
-
-    // CANCEL SUBSCRIPTION
-  ]
 ]);
 
 
