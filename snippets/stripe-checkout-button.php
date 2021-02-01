@@ -1,0 +1,1 @@
+<button type="button" id="<?= $id ?>" class="<?= $classes ?>"><?= $text ?></button>
