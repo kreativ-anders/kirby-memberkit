@@ -8,11 +8,23 @@ Kirby::plugin('kreativ-anders/stripekit', [
     'checkoutSlag' => 'checkout',
     'successURL' => '../success',
     'cancelURL' => '../cancel',
-    'free' => 'FREE',
-    'basic' => 'BASIC',
-    'basicPrice' => 'price_xxxx',
-    'premium' => 'PREMIUM',
-    'premiumPrice' => 'price_xxxx',
+    'tier0' => 'FREE',
+    'tier1' => 'BASIC',
+    'tier1Price' => 'price_xxxx',
+    'tier2' => 'PREMIUM',
+    'tier2Price' => 'price_xxxx',
+  ],
+
+  /* 
+    SNIPPETS 
+    -----
+    https://getkirby.com/docs/reference/plugins/extensions/snippets
+
+  */
+
+  'snippets' => [
+    'stripejs' => __DIR__ . '/snippets/stripejs.php',
+    'stripe-checkout-button' => __DIR__ . '/snippets/stripe-checkout-button.php'    
   ],
 
   /* 
@@ -34,10 +46,10 @@ Kirby::plugin('kreativ-anders/stripekit', [
           'email' => $user->email()
         ]);
 
-        // UPDATE KIRBY USER - FREE TIER
+        // UPDATE KIRBY USER - FREE TIER 0
         $user->update([
           'stripe_customer' => $customer->id,
-          'tier' => option('kreativ-anders.stripekit.free')
+          'tier' => option('kreativ-anders.stripekit.tier0')
         ]);
 
       } catch(Exception $e) {
@@ -88,12 +100,12 @@ Kirby::plugin('kreativ-anders/stripekit', [
 
   */
 
-  // BASIC TIER
+  // TIER 1
   'routes' => function ($kirby) {
     return [
       [
         // PATTERN --> CHECKOUT SLAG / BASIC TIER NAME / STRIPE CUSTOMER / BASIC TIER PRICE
-        'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/' . Str::lower(option('kreativ-anders.stripekit.basic')) . '/(:all)/(:all)',
+        'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/' . Str::lower(option('kreativ-anders.stripekit.tier1')) . '/(:all)/(:all)',
         'test' => option('kreativ-anders.stripekit.checkoutSlag'),
         'action' => function ($user, $price) {
 
