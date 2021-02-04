@@ -137,10 +137,10 @@ Kirby::plugin('kreativ-anders/stripekit', [
           $cancelURL = option('kreativ-anders.stripekit.cancelURL');         
 
           return [
-            'user' => base64_decode($user),
-            'successURL' => $successURL,
-            'cancelURL' => $cancelURL,
-            'price' => base64_decode($price),
+            //'user' => base64_decode($user),
+            //'successURL' => $successURL,
+            //'cancelURL' => $cancelURL,
+            //'price' => base64_decode($price),
             'id' => $checkout->id,
           ];
         }
