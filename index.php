@@ -1,23 +1,33 @@
 <?php
+
+// INCLUDE EXTERNAL LIBRARIES
 @include_once __DIR__ . '/lib/stripe/init.php';
 
 Kirby::plugin('kreativ-anders/stripekit', [
+
+  /* 
+    OPTIONS 
+    ----
+    https://getkirby.com/docs/reference/plugins/extensions/options
+
+  */
+
   'options' => [
-    'privateKey' => 'sk_test_xxx',
-    'publicKey' => 'pk_test_xxx',
-    'checkoutSlag' => 'checkout',
-    'successURL' => '../success',
-    'cancelURL' => '../cancel',
-    'tier0' => 'FREE',
-    'tier1' => 'BASIC',
-    'tier1Price' => 'price_xxxx',
-    'tier2' => 'PREMIUM',
-    'tier2Price' => 'price_xxxx',
+    'privateKey'    => 'sk_test_xxx',
+    'publicKey'     => 'pk_test_xxx',
+    'checkoutSlag'  => 'checkout',
+    'successURL'    => '../success',
+    'cancelURL'     => '../cancel',
+    'tier0'         => 'FREE',
+    'tier1'         => 'BASIC',
+    'tier1Price'    => 'price_xxxx',
+    'tier2'         => 'PREMIUM',
+    'tier2Price'    => 'price_xxxx',
   ],
 
   /* 
     SNIPPETS 
-    -----
+    ----
     https://getkirby.com/docs/reference/plugins/extensions/snippets
 
   */
@@ -29,7 +39,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
 
   /* 
     HOOKS 
-    -----
+    ----
     https://getkirby.com/docs/reference/plugins/hooks
 
   */
@@ -94,9 +104,9 @@ Kirby::plugin('kreativ-anders/stripekit', [
   ],
 
   /*
-    API
-    ----------
-    https://getkirby.com/docs/reference/plugins/extensions/api
+    ROUTES
+    ----
+    https://getkirby.com/docs/reference/plugins/extensions/routes
 
   */
 
@@ -147,6 +157,36 @@ Kirby::plugin('kreativ-anders/stripekit', [
       ]
     ];
   },
+
+  /*
+    USER-METHODS
+    ----
+    https://getkirby.com/docs/reference/plugins/extensions/user-methods
+
+  */
+
+  'userMethods' => [
+    // SUBSCRIBE USER TO TIER X
+    'subscripe' => function ($tier) {
+
+      /*
+        This might be great for user experience, but it is painful regarding process variants.
+        More variants yield more complexity. Keep it simple and stupid.
+
+        => Cancel subscription and subscripe to new one (Upgrade & Downgrade)
+
+        Furthermore, it requires you to know the payment information. Sensetive data like this should be handled via Stripe´s checkout.
+        In case the user is already subscribed to a tier you might have the payment information, but as mentioned earlier - 
+        This increase the process variants that need to be considered.
+      */
+      return false;
+    },
+    // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X
+    'getStripeCheckoutURL' => function ($tier, $price) {
+      return $text . ', ' . $this->username();
+  }
+  ],
+
 ]);
 
 
