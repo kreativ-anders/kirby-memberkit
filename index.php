@@ -13,7 +13,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
   */
 
   'options' => [
-    'privateKey'    => 'sk_test_xxx',
+    'secretKey'     => 'sk_test_xxx',
     'publicKey'     => 'pk_test_xxx',
     'checkoutSlag'  => 'checkout',
     'successURL'    => '../success',
@@ -51,7 +51,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
 
       try {
 
-        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
+        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
         $customer = $stripe->customers->create([
           'email' => $user->email()
         ]);
@@ -73,7 +73,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
 
       try {
 
-        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
+        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
         $stripe->customers->update(
           $oldUser->stripe_customer(),
           ['email' => $newUser->email()]
@@ -90,7 +90,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
       
       try {
 
-        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
+        $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
         $stripe->customers->delete(
           $user->stripe_customer(),
           []
@@ -125,7 +125,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
           try {
 
             // STRIPE CHECKOUT SESSION
-            $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.privateKey'));
+            $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
             $checkout = $stripe->checkout->sessions->create([
               'success_url' => option('kreativ-anders.stripekit.successURL'),
               'cancel_url' => option('kreativ-anders.stripekit.cancelURL'),
@@ -201,8 +201,15 @@ Kirby::plugin('kreativ-anders/stripekit', [
       return $url;
     },
     // RETRIEVE STRIPE CUSTOMER
-    'DFSDF' => function ($tier, $price) {
-      return $text . ', ' . $this->username();
+    'retrieveStripeCustomer' => function () {
+
+      $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+      $stripe->customers->retrieve(
+        $this->stripe_customer(),
+        []
+      );
+
+      return $stripe;
     }
   ],
 
