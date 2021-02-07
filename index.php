@@ -200,16 +200,23 @@ Kirby::plugin('kreativ-anders/stripekit', [
 
       return $url;
     },
-    // RETRIEVE STRIPE CUSTOMER
+    // RETRIEVE STRIPE CUSTOMER (WITH SUBSCRIPTIONS)
     'retrieveStripeCustomer' => function () {
 
       $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
-      $stripe->customers->retrieve(
+      $customer = $stripe->customers->retrieve(
         $this->stripe_customer(),
-        []
+        ['expand' => ['subscription']]
       );
 
-      return $stripe;
+      return $customer;
+    },
+    // RETRIEVE STRIPE CUSTOMER SUBSCRIPTION
+    'retrieveStripeSubscription' => function () {
+
+      $subscription = $this->retrieveStripeCustomer()->subscriptions['data'][0];
+
+      return $subscription;
     }
   ],
 
