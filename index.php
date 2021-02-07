@@ -178,6 +178,8 @@ Kirby::plugin('kreativ-anders/stripekit', [
         Furthermore, it requires you to know the payment information. Sensetive data like this should be handled via Stripe´s checkout.
         In case the user is already subscribed to a tier you might have the payment information, but as mentioned earlier - 
         This increase the process variants that need to be considered.
+
+        https://stripe.com/docs/billing/subscriptions/upgrade-downgrade
       */
       return false;
     },
