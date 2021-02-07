@@ -114,7 +114,7 @@ Kirby::plugin('kreativ-anders/stripekit', [
   'routes' => function ($kirby) {
     return [
       [
-        // PATTERN --> CHECKOUT SLAG / BASIC TIER NAME / STRIPE CUSTOMER / BASIC TIER PRICE
+        // PATTERN --> CHECKOUT SLAG / TIER NAME / STRIPE CUSTOMER / STRIPE BASIC TIER PRICE
         'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/' . Str::lower(option('kreativ-anders.stripekit.tier1')) . '/(:all)/(:all)',
         'test' => option('kreativ-anders.stripekit.checkoutSlag'),
         'action' => function ($user, $price) {
@@ -185,8 +185,22 @@ Kirby::plugin('kreativ-anders/stripekit', [
     },
     // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X
     'getStripeCheckoutURL' => function ($tier, $price) {
+
+      /*
+        Combination of $tier + $price is not validated at all!
+      */
+
+      $url  = Str::lower(option('kreativ-anders.stripekit.checkoutSlag'));  // CHECKOUT SLAG
+      $url .= '/' . Str::lower($tier);                                      // TIER NAME
+      $url .= '/' . base64_encode($this->stripe_customer());                // STRIPE CUSTOMER
+      $url .= '/' . base64_encode($price);                                  // STRIPE TIER PRICE
+
+      return $url;
+    },
+    // RETRIEVE STRIPE CUSTOMER
+    'DFSDF' => function ($tier, $price) {
       return $text . ', ' . $this->username();
-  }
+    }
   ],
 
 ]);
