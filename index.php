@@ -115,9 +115,12 @@ Kirby::plugin('kreativ-anders/stripekit', [
     return [
       [
         // PATTERN --> CHECKOUT SLAG / TIER NAME / STRIPE CUSTOMER / STRIPE BASIC TIER PRICE
-        'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/' . Str::lower(option('kreativ-anders.stripekit.tier1')) . '/(:all)/(:all)',
-        'test' => option('kreativ-anders.stripekit.checkoutSlag'),
-        'action' => function ($user, $price) {
+        'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/(:all)/(:all)',
+        'action' => function ($tier, $user, $price) {
+
+          /*
+            $tier / TIER NAME in URL are just for beautyfication.
+          */
 
           try {
 
