@@ -65,6 +65,30 @@ return [
     $subscription = $this->retrieveStripeCustomer()->subscriptions['data'][0];
 
     return $subscription;
-  }
+  },
+  // CHECK USER PRIVILEGES
+  'isAllowed' => function ($tier) {
+
+    $userTier = $this->tier()->toString();
+
+    if ($this->tier()->isEmpty()) {
+      return false;
+    }
+
+    if ($tier === $userTier) {
+      return true;
+    }
+
+    if ($tier === option('kreativ-anders.stripekit.tier0') && ($userTier === option('kreativ-anders.stripekit.tier1') || $userTier === option('kreativ-anders.stripekit.tier2'))) {
+      return true;
+    }
+
+    if ($tier === option('kreativ-anders.stripekit.tier1') && $userTier === option('kreativ-anders.stripekit.tier2')) {
+      return true;
+    }
+
+    return false;
+  }, 
+
 
 ];
