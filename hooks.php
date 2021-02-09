@@ -23,7 +23,7 @@ return [
       // UPDATE KIRBY USER - FREE TIER 0
       $user->update([
         'stripe_customer' => $customer->id,
-        'tier' => option('kreativ-anders.stripekit.tier0')
+        'tier' => option('kreativ-anders.stripekit.tiers')[0]['name']
       ]);
 
     } catch(Exception $e) {

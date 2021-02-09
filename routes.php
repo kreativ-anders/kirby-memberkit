@@ -56,17 +56,22 @@ return function ($kirby) {
 
         $subscription = null;
 
+        /*
+        
+          Maybe there is more dynamic approach without directly checking the config array!!!
+        */
+
         switch ($tier) {
-          case Str::lower(option('kreativ-anders.stripekit.tier1')):
-            $tier = option('kreativ-anders.stripekit.tier1');
+          case Str::lower(option('kreativ-anders.stripekit.tiers')[1]['name']):
+            $tier = option('kreativ-anders.stripekit.tiers')[1]['name'];
             break;
 
-          case Str::lower(option('kreativ-anders.stripekit.tier2')):
-            $tier = option('kreativ-anders.stripekit.tier2');
+          case Str::lower(option('kreativ-anders.stripekit.tiers')[2]['name']):
+            $tier = option('kreativ-anders.stripekit.tiers')[2]['name'];
             break;
           
           default:
-            $tier = option('kreativ-anders.stripekit.tier0');
+            $tier = option('kreativ-anders.stripekit.tiers')[0]['name'];
             break;
         }
 

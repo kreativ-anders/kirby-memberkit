@@ -26,16 +26,18 @@ return [
     return false;
   },
   // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X
-  'getStripeCheckoutURL' => function ($tier, $price) {
+  'getStripeCheckoutURL' => function ($tier) {
 
-    /*
-      Combination of $tier + $price is not validated at all!
-    */
+    if (!isset($tier['name'])   || empty($tier['name'])   || $tier['name'] === '' || 
+        !isset($tier['price'])  || empty($tier['price'])  || $tier['price'] === '') {
+
+      throw new Exception('tier price or name is empty!'); 
+    }
 
     $url  = Str::lower(option('kreativ-anders.stripekit.checkoutSlag'));  // CHECKOUT SLAG
-    $url .= '/' . Str::lower($tier);                                      // TIER NAME
+    $url .= '/' . Str::lower($tier['name']);                              // TIER NAME
     $url .= '/' . base64_encode($this->stripe_customer());                // STRIPE CUSTOMER
-    $url .= '/' . base64_encode($price);                                  // STRIPE TIER PRICE
+    $url .= '/' . base64_encode($tier['price']);                          // STRIPE TIER PRICE
 
     return $url;
   },
@@ -67,23 +69,31 @@ return [
     return $subscription;
   },
   // CHECK USER PRIVILEGES
+  /*
+    Due to usability isAllowed receives a string so you do not need to call it like:
+    $kirby->user()->isAllowed(option('kreativ-anders.stripekit.tiers')[0]['name'])
+    Now you can quickly call the function by writing:
+    $kirby->user()->isAllowed('Basic') 
+  */
   'isAllowed' => function ($tier) {
 
     $userTier = $this->tier()->toString();
 
-    if ($this->tier()->isEmpty()) {
+    $userIndex = array_search($userTier, array_column(option('kreativ-anders.stripekit.tiers'), 'name'), false);
+    $tierIndex = array_search($tier, array_column(option('kreativ-anders.stripekit.tiers'), 'name'), false);
+ 
+    if ($this->tier()->isEmpty() || $this->stripe_subscription()->isEmpty() || $this->stripe_status()->isEmpty() || $this->stripe_status()->toString() != 'active') {
+
       return false;
     }
 
-    if ($tier === $userTier) {
+    if ($userTier === $tier) {
+
       return true;
     }
 
-    if ($tier === option('kreativ-anders.stripekit.tier0') && ($userTier === option('kreativ-anders.stripekit.tier1') || $userTier === option('kreativ-anders.stripekit.tier2'))) {
-      return true;
-    }
+    if ($userIndex >= $tierIndex) {
 
-    if ($tier === option('kreativ-anders.stripekit.tier1') && $userTier === option('kreativ-anders.stripekit.tier2')) {
       return true;
     }
 

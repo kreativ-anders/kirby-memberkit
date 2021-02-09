@@ -14,10 +14,26 @@ return [
   'checkoutSlag'  => 'checkout',
   'successURL'    => '../success',
   'cancelURL'     => '../cancel',
-  'tier0'         => 'FREE',
-  'tier1'         => 'BASIC',
-  'tier1Price'    => 'price_xxxx',
-  'tier2'         => 'PREMIUM',
-  'tier2Price'    => 'price_xxxx',
+
+  /*
+    TIERS
+    ----
+    The tiers config is a 2D-array that needs to be ordererd hierarchical.
+    The first index is always the entry/default tier after registration. 
+    Due to consistency the tier on index 0 holds a price, but it is never ever checked, so keep it null.
+    All the following tiers need to be greater than the one before, e.g., FREE --> BASIC --> PREMIUM --> SUPER DELUXE etc.
+  */
+
+  'tiers'         => [
+    // INDEX 0
+    [ 'name'  => 'FREE'
+     ,'price' => null],
+    // INDEX 1
+    [ 'name'  => 'BASIC'
+     ,'price' => 'price_xxxx'],
+    // INDEX 2
+    [ 'name'  => 'PREMIUM'
+     ,'price' => 'price_xxxx'],
+  ]
 
 ];
