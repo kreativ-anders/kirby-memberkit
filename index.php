@@ -1,7 +1,7 @@
 <?php
 
 // INCLUDE EXTERNAL LIBRARIES
-@include_once __DIR__ . '/lib/stripe/init.php';
+include_once __DIR__ . '/lib/stripe/init.php';
 
 Kirby::plugin('kreativ-anders/stripekit', [
 
