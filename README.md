@@ -110,6 +110,10 @@ snippet('stripe-checkout-button', [ 'id'      => 'basic-checkout-button'
 ## Notes:
 This Plug-In is built for Kirby CMS based on **Kirby´s Starterkit** with the Add-On **[kirby-userkit](https://github.com/kreativ-anders/kirby-userkit)** for easy front end user creation.
 
+## Warning:
+Do not subscribe multiple tiers to a user. Even though this should not be possible with the Plug-In, be aware not to do it within the stripe dashboard anyway!
+Use with caution and test before of course.
+
 **Kirby CMS requires a dedicated licence:**
 
 *Go to https://getkirby.com/buy*
