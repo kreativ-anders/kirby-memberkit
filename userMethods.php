@@ -84,6 +84,35 @@ return [
 
     return $subscription;
   },
+  // MERGE STRIPE CUSTOMER WITH KIRBY USER
+  'mergeStripeCustomer' => function () {
+
+    $subscription = $this->retrieveStripeSubscription();
+
+    try {
+
+      // FIND TIER NAME
+      $price = $subscription['items']['data'][0]['price']['id'];
+      $priceIndex = array_search($price, array_column(option('kreativ-anders.stripekit.tiers'), 'price'), false);
+      $tier = option('kreativ-anders.stripekit.tiers')[$priceIndex]['name'];
+
+
+      // UPDATE KIRBY USER
+      $this->update([
+        'stripe_subscription' => $subscription->id,
+        'stripe_status' => $subscription->status,
+        'tier' => $tier
+      ]);
+
+      return true;
+
+    } catch(Exception $e) {
+        
+      // LOG ERROR SOMEWHERE !!!
+    }    
+
+    return false;
+  },
   // CHECK USER PRIVILEGES
   /*
     Due to usability isAllowed receives a string so you do not need to call it like:
