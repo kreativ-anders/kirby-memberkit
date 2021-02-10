@@ -61,18 +61,27 @@ return function ($kirby) {
 
         if (!kirby()->user()) {go();};
 
-        $user  = kirby()->user();
-        $subscription  = kirby()->user()->stripe_subscription();
+        $user  = base64_decode($user);
+        $subscription  = base64_decode($subscription);
 
 
         try {
 
+          // CANCEL STRIPE SUBSCRIPTION
+          $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+          $stripe->subscriptions->cancel(
+            $subscription,
+            []
+          );
+
           // SUBSCRIPTION STATUS WILL BE "CANCELED"
-          /*$this->update([
+          kirby()->user($user)->update([
             'stripe_subscription' => null,
             'stripe_status' => null,
             'tier' => option('kreativ-anders.stripekit.tiers')[0]['name']
-          ]);*/
+          ]);
+
+          go();
 
                 
         } catch(Exception $e) {
