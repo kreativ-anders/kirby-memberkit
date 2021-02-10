@@ -1,3 +1,7 @@
+<?php 
+// CHECK KIRBY USER FOR SUBSCRIBTIONS
+if($kirby->user()->stripe_subscription()->isEmpty()): ?>
+
 <button type="button" id="<?= $id ?>" class="<?= $classes ?>"><?= $text ?></button>
 
 <script type="text/javascript">
@@ -31,3 +35,5 @@
   });
 
 </script>
+
+<?php endif; ?>
