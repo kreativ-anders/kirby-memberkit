@@ -25,18 +25,34 @@ return [
     */
     return false;
   },
+  // RETURN STRIPE SUBSCRIPTION CANCEL URL
+  'getStripeCancelURL' => function () {
+
+    $subscription = null;
+
+    if ($this->stripe_subscription()->isEmpty()) {
+
+      return '';
+    }
+
+    $url  = 'cancel';                                                           // CANCEL
+    $url .= '/' . Str::lower(option('kreativ-anders.stripekit.checkoutSlag'));  // CHECKOUT SLAG
+    $url .= '/' . base64_encode($this->email());                                // KIRBY USER EMAIL    
+    $url .= '/' . base64_encode($this->stripe_subscription());                  // STRIPE SUBSCRIPTION
+
+    return $url;
+  },
   // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X
   'getStripeCheckoutURL' => function ($tier) {
 
     if (!isset($tier['name'])   || empty($tier['name'])   || $tier['name'] === '' || 
         !isset($tier['price'])  || empty($tier['price'])  || $tier['price'] === '') {
 
-      throw new Exception('tier price or name is empty!'); 
+      throw new Exception('tier price or name is empty!');
     }
 
     $url  = Str::lower(option('kreativ-anders.stripekit.checkoutSlag'));  // CHECKOUT SLAG
     $url .= '/' . Str::lower($tier['name']);                              // TIER NAME
-    $url .= '/' . base64_encode($this->stripe_customer());                // STRIPE CUSTOMER
     $url .= '/' . base64_encode($tier['price']);                          // STRIPE TIER PRICE
 
     return $url;
