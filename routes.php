@@ -12,13 +12,17 @@ return function ($kirby) {
     
     // CREATE STRIPE CHECKOUT SESSION
     [
-      // PATTERN --> CHECKOUT SLAG / TIER NAME / STRIPE CUSTOMER / STRIPE BASIC TIER PRICE
-      'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/(:all)/(:all)',
-      'action' => function ($tier, $user, $price) {
+      // PATTERN --> CHECKOUT SLAG / TIER NAME / STRIPE BASIC TIER PRICE
+      'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/(:all)',
+      'action' => function ($tier, $price) {
+
+        if (!kirby()->user()) {go();};
 
         $successURL  = kirby()->site()->url() . '/';
         $successURL .= Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/';
         $successURL .= Str::lower($tier) . '/success';
+
+        $customer = kirby()->user()->stripe_customer();
 
         try {
 
@@ -36,7 +40,7 @@ return function ($kirby) {
               ],
             ],
             'mode' => 'subscription',
-            'customer' => base64_decode($user),
+            'customer' => kirby()->user()->stripe_customer(),
           ]);
       
         } catch(Exception $e) {
@@ -45,7 +49,41 @@ return function ($kirby) {
         }     
 
         return [
-          'id' => $checkout->id,
+          'id' => $checkout->id
+        ];
+      }
+    ],
+    // CANCEL STRIPE SUBSCRIPTION
+    [
+      // PATTERN --> CANCEL / CHECKOUT SLAG / KIRBY USER / STRIPE SUBSCRIPTION
+      'pattern' => 'cancel/' . Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/(:all)',
+      'action' => function ($user, $subscription) {
+
+        if (!kirby()->user()) {go();};
+
+        $user  = kirby()->user();
+        $subscription  = kirby()->user()->stripe_subscription();
+
+
+        try {
+
+          // SUBSCRIPTION STATUS WILL BE "CANCELED"
+          /*$this->update([
+            'stripe_subscription' => null,
+            'stripe_status' => null,
+            'tier' => option('kreativ-anders.stripekit.tiers')[0]['name']
+          ]);*/
+
+                
+        } catch(Exception $e) {
+        
+          // LOG ERROR SOMEWHERE !!!
+        }     
+
+        return [
+          'id' => false,
+          'user' => $user,
+          'sub' => $subscription,
         ];
       }
     ],
@@ -54,6 +92,8 @@ return function ($kirby) {
       // PATTERN --> CHECKOUT SLAG / TIER NAME / success
       'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/success',
       'action' => function ($tier) {
+
+        if (!kirby()->user()) {go();};
 
         $subscription = null;
 
