@@ -28,6 +28,7 @@ return function ($kirby) {
             'success_url' => $successURL,
             'cancel_url' => option('kreativ-anders.stripekit.cancelURL'),
             'payment_method_types' => ['card'],
+            'allow_promotion_codes' => true,
             'line_items' => [
               [
                 'price' => base64_decode($price),
