@@ -13,13 +13,13 @@ return function ($kirby) {
     // CREATE STRIPE CHECKOUT SESSION
     [
       // PATTERN --> CHECKOUT SLAG / TIER NAME / STRIPE BASIC TIER PRICE
-      'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/(:all)',
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/(:all)/(:all)',
       'action' => function ($tier, $price) {
 
         if (!kirby()->user()) {go();};
 
         $successURL  = kirby()->site()->url() . '/';
-        $successURL .= Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/';
+        $successURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/';
         $successURL .= Str::lower($tier) . '/success';
 
         $customer = kirby()->user()->stripe_customer();
@@ -27,10 +27,10 @@ return function ($kirby) {
         try {
 
           // STRIPE CHECKOUT SESSION
-          $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+          $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
           $checkout = $stripe->checkout->sessions->create([
             'success_url' => $successURL,
-            'cancel_url' => option('kreativ-anders.stripekit.cancelURL'),
+            'cancel_url' => option('kreativ-anders.memberkit.cancelURL'),
             'payment_method_types' => ['card'],
             'allow_promotion_codes' => true,
             'line_items' => [
@@ -56,7 +56,7 @@ return function ($kirby) {
     // CANCEL STRIPE SUBSCRIPTION
     [
       // PATTERN --> CANCEL / CHECKOUT SLAG / KIRBY USER / STRIPE SUBSCRIPTION
-      'pattern' => 'cancel/' . Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/(:all)',
+      'pattern' => 'cancel/' . Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/(:all)/(:all)',
       'action' => function ($user, $subscription) {
 
         if (!kirby()->user()) {go();};
@@ -68,7 +68,7 @@ return function ($kirby) {
         try {
 
           // CANCEL STRIPE SUBSCRIPTION
-          $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+          $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
           $stripe->subscriptions->cancel(
             $subscription,
             []
@@ -78,7 +78,7 @@ return function ($kirby) {
           kirby()->user($user)->update([
             'stripe_subscription' => null,
             'stripe_status' => null,
-            'tier' => option('kreativ-anders.stripekit.tiers')[0]['name']
+            'tier' => option('kreativ-anders.memberkit.tiers')[0]['name']
           ]);
 
           go();
@@ -99,7 +99,7 @@ return function ($kirby) {
     // UPDATE USER AFTER SUCCESSFUL CHECKOUT
     [
       // PATTERN --> CHECKOUT SLAG / TIER NAME / success
-      'pattern' => Str::lower(option('kreativ-anders.stripekit.checkoutSlag')) . '/(:all)/success',
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/(:all)/success',
       'action' => function ($tier) {
 
         if (!kirby()->user()) {go();};
@@ -112,16 +112,16 @@ return function ($kirby) {
         */
 
         switch ($tier) {
-          case Str::lower(option('kreativ-anders.stripekit.tiers')[1]['name']):
-            $tier = option('kreativ-anders.stripekit.tiers')[1]['name'];
+          case Str::lower(option('kreativ-anders.memberkit.tiers')[1]['name']):
+            $tier = option('kreativ-anders.memberkit.tiers')[1]['name'];
             break;
 
-          case Str::lower(option('kreativ-anders.stripekit.tiers')[2]['name']):
-            $tier = option('kreativ-anders.stripekit.tiers')[2]['name'];
+          case Str::lower(option('kreativ-anders.memberkit.tiers')[2]['name']):
+            $tier = option('kreativ-anders.memberkit.tiers')[2]['name'];
             break;
           
           default:
-            $tier = option('kreativ-anders.stripekit.tiers')[0]['name'];
+            $tier = option('kreativ-anders.memberkit.tiers')[0]['name'];
             break;
         }
 
@@ -147,7 +147,7 @@ return function ($kirby) {
           $subscription = $e;
         }       
 
-        return go(option('kreativ-anders.stripekit.successURL'));
+        return go(option('kreativ-anders.memberkit.successURL'));
       }
     ]
   ];

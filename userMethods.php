@@ -36,7 +36,7 @@ return [
     }
 
     $url  = 'cancel';                                                           // CANCEL
-    $url .= '/' . Str::lower(option('kreativ-anders.stripekit.checkoutSlag'));  // CHECKOUT SLAG
+    $url .= '/' . Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));  // CHECKOUT SLAG
     $url .= '/' . base64_encode($this->email());                                // KIRBY USER EMAIL    
     $url .= '/' . base64_encode($this->stripe_subscription());                  // STRIPE SUBSCRIPTION
 
@@ -51,7 +51,7 @@ return [
       throw new Exception('tier price or name is empty!');
     }
 
-    $url  = Str::lower(option('kreativ-anders.stripekit.checkoutSlag'));  // CHECKOUT SLAG
+    $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));  // CHECKOUT SLAG
     $url .= '/' . Str::lower($tier['name']);                              // TIER NAME
     $url .= '/' . base64_encode($tier['price']);                          // STRIPE TIER PRICE
 
@@ -64,7 +64,7 @@ return [
 
     try {
 
-      $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+      $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
       $customer = $stripe->customers->retrieve(
         $this->stripe_customer(),
         ['expand' => ['subscription']]
@@ -93,8 +93,8 @@ return [
 
       // FIND TIER NAME
       $price = $subscription['items']['data'][0]['price']['id'];
-      $priceIndex = array_search($price, array_column(option('kreativ-anders.stripekit.tiers'), 'price'), false);
-      $tier = option('kreativ-anders.stripekit.tiers')[$priceIndex]['name'];
+      $priceIndex = array_search($price, array_column(option('kreativ-anders.memberkit.tiers'), 'price'), false);
+      $tier = option('kreativ-anders.memberkit.tiers')[$priceIndex]['name'];
 
 
       // UPDATE KIRBY USER
@@ -116,7 +116,7 @@ return [
   // CHECK USER PRIVILEGES
   /*
     Due to usability isAllowed receives a string so you do not need to call it like:
-    $kirby->user()->isAllowed(option('kreativ-anders.stripekit.tiers')[0]['name'])
+    $kirby->user()->isAllowed(option('kreativ-anders.memberkit.tiers')[0]['name'])
     Now you can quickly call the function by writing:
     $kirby->user()->isAllowed('Basic') 
   */
@@ -124,8 +124,8 @@ return [
 
     $userTier = $this->tier()->toString();
 
-    $userIndex = array_search($userTier, array_column(option('kreativ-anders.stripekit.tiers'), 'name'), false);
-    $tierIndex = array_search($tier, array_column(option('kreativ-anders.stripekit.tiers'), 'name'), false);
+    $userIndex = array_search($userTier, array_column(option('kreativ-anders.memberkit.tiers'), 'name'), false);
+    $tierIndex = array_search($tier, array_column(option('kreativ-anders.memberkit.tiers'), 'name'), false);
  
     if ($this->tier()->isEmpty() || $this->stripe_subscription()->isEmpty() || $this->stripe_status()->isEmpty() || $this->stripe_status()->toString() != 'active') {
 

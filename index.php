@@ -3,7 +3,7 @@
 // INCLUDE EXTERNAL LIBRARIES
 include_once __DIR__ . '/lib/stripe/init.php';
 
-Kirby::plugin('kreativ-anders/stripekit', [
+Kirby::plugin('kreativ-anders/memberkit', [
 
   'options'     => include __DIR__ . '/options.php',
   'snippets'    => include __DIR__ . '/snippets.php',

@@ -15,7 +15,7 @@ return [
 
     try {
 
-      $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+      $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
       $customer = $stripe->customers->create([
         'email' => $user->email()
       ]);
@@ -23,7 +23,7 @@ return [
       // UPDATE KIRBY USER - FREE TIER 0
       $user->update([
         'stripe_customer' => $customer->id,
-        'tier' => option('kreativ-anders.stripekit.tiers')[0]['name']
+        'tier' => option('kreativ-anders.memberkit.tiers')[0]['name']
       ]);
 
     } catch(Exception $e) {
@@ -38,7 +38,7 @@ return [
 
     try {
 
-      $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+      $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
       $stripe->customers->update(
         $oldUser->stripe_customer(),
         ['email' => $newUser->email()]
@@ -56,7 +56,7 @@ return [
     
     try {
 
-      $stripe = new \Stripe\StripeClient(option('kreativ-anders.stripekit.secretKey'));
+      $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
       $stripe->customers->delete(
         $user->stripe_customer(),
         []

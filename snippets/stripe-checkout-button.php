@@ -8,7 +8,7 @@ if($kirby->user()->stripe_subscription()->isEmpty()): ?>
 
   document.addEventListener("DOMContentLoaded", function(event) { 
         
-    var stripe = Stripe("<?= option('kreativ-anders.stripekit.publicKey') ?>");
+    var stripe = Stripe("<?= option('kreativ-anders.memberkit.publicKey') ?>");
     var checkoutButton = document.getElementById("<?= $id ?>");
     checkoutButton.addEventListener("click", function () {
       fetch("<?= $url ?>", {
