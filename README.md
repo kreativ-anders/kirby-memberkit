@@ -142,8 +142,10 @@ For Instance a user with the tier **Premium - Monthly**:
 
 <?php if ($kirby->user() && $kirby->user()->isAllowed('Premium - Biannual')): ?>
 <p>
-  The user will NOT see the content, since "Premium - Biannual" is greater than "Premium - Monthly" from a order persepctive.
-  So make sure to always use the lower tier name for comparissons to ensure all Premium users independent from their payment interval will able to see/use the content/functionality behind!
+  The user will NOT see the content, since "Premium - Biannual" is greater than "Premium - Monthly" 
+  from a order persepctive. So make sure to always use the lower tier name for comparissons 
+  to ensure all Premium users independent from their payment interval will able 
+  to see/use the content/functionality behind!
 </p>
 <?php endif ?>
 ````
