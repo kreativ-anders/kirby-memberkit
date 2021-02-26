@@ -12,11 +12,14 @@ return function ($kirby) {
     
     // CREATE STRIPE CHECKOUT SESSION
     [
-      // PATTERN --> CHECKOUT SLAG / TIER NAME / STRIPE BASIC TIER PRICE
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/(:all)/(:all)',
-      'action' => function ($tier, $price) {
+      // PATTERN --> CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/subscribe/(:all)',
+      'action' => function ($tier) {
 
         if (!kirby()->user()) {go();};
+
+        $tierIndex = array_search($tier, array_map("Str::lower", array_column(option('kreativ-anders.memberkit.tiers'), 'name')), false);
+        $price = option('kreativ-anders.memberkit.tiers')[$tierIndex]['price'];
 
         $successURL  = kirby()->site()->url() . '/';
         $successURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/';
@@ -35,7 +38,7 @@ return function ($kirby) {
             'allow_promotion_codes' => true,
             'line_items' => [
               [
-                'price' => base64_decode($price),
+                'price' => $price,
                 'quantity' => 1,
               ],
             ],
@@ -55,15 +58,14 @@ return function ($kirby) {
     ],
     // CANCEL STRIPE SUBSCRIPTION
     [
-      // PATTERN --> CANCEL / CHECKOUT SLAG / KIRBY USER / STRIPE SUBSCRIPTION
-      'pattern' => 'cancel/' . Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/(:all)/(:all)',
-      'action' => function ($user, $subscription) {
+      // PATTERN --> CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/(:all)',
+      'action' => function ($tier) {
 
         if (!kirby()->user()) {go();};
 
-        $user  = base64_decode($user);
-        $subscription  = base64_decode($subscription);
-
+        $subscription = kirby()->user()->stripe_subscription();
+        $email = kirby()->user()->email();
 
         try {
 
@@ -75,25 +77,18 @@ return function ($kirby) {
           );
 
           // SUBSCRIPTION STATUS WILL BE "CANCELED"
-          kirby()->user($user)->update([
+          kirby()->user($email)->update([
             'stripe_subscription' => null,
             'stripe_status' => null,
             'tier' => option('kreativ-anders.memberkit.tiers')[0]['name']
           ]);
-
-          go();
-
                 
         } catch(Exception $e) {
         
           // LOG ERROR SOMEWHERE !!!
         }     
 
-        return [
-          'id' => false,
-          'user' => $user,
-          'sub' => $subscription,
-        ];
+        return go();
       }
     ],
     // UPDATE USER AFTER SUCCESSFUL CHECKOUT

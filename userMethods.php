@@ -32,13 +32,13 @@ return [
 
     if ($this->stripe_subscription()->isEmpty()) {
 
-      return '';
+      throw new Exception('No subscription to cancel!');
     }
 
-    $url  = 'cancel';                                                           // CANCEL
-    $url .= '/' . Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));  // CHECKOUT SLAG
-    $url .= '/' . base64_encode($this->email());                                // KIRBY USER EMAIL    
-    $url .= '/' . base64_encode($this->stripe_subscription());                  // STRIPE SUBSCRIPTION
+    // CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
+    $url =  Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url .= '/cancel';
+    $url .= '/' . Str::lower(Str::trim($this->tier()));   
 
     return $url;
   },
@@ -51,9 +51,10 @@ return [
       throw new Exception('tier price or name is empty!');
     }
 
-    $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));  // CHECKOUT SLAG
-    $url .= '/' . Str::lower($tier['name']);                              // TIER NAME
-    $url .= '/' . base64_encode($tier['price']);                          // STRIPE TIER PRICE
+    // CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
+    $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url .= '/subscribe';
+    $url .= '/' . Str::lower(Str::trim($tier['name']));
 
     return $url;
   },
