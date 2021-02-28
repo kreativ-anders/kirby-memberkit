@@ -58,6 +58,15 @@ return [
 
     return $url;
   },
+  // RETURN STRIPE CUSTOMER PORTAL URL
+  'getStripePortalURL' => function () {
+
+    // CHECKOUT SLAG / STRIPE PORTAL
+    $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url .= '/portal';
+
+    return $url;
+  },
   // RETRIEVE STRIPE CUSTOMER (WITH SUBSCRIPTIONS)
   'retrieveStripeCustomer' => function () {
 

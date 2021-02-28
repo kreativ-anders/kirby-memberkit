@@ -56,6 +56,37 @@ return function ($kirby) {
         ];
       }
     ],
+    // CREATE STRIPE CUSTOMER PORTAL SESSION
+    [
+      // PATTERN --> CHECKOUT SLAG / STRIPE PORTAL
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/portal',
+      'action' => function () {
+
+        if (!kirby()->user()) {go();};
+
+        $customer = kirby()->user()->stripe_customer();
+        $url = kirby()->site()->url();
+
+        try {
+
+          // STRIPE PORTAL SESSION
+          $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
+          $session = $stripe->billingPortal->sessions->create([
+            'customer' => $customer,
+            'return_url' => $url,
+          ]);
+
+          $url = $session->url;
+          
+      
+        } catch(Exception $e) {
+        
+          // LOG ERROR SOMEWHERE !!!
+        }     
+
+        return go($url);
+      }
+    ],
     // CANCEL STRIPE SUBSCRIPTION
     [
       // PATTERN --> CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
