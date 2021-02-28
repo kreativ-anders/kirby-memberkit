@@ -66,5 +66,5 @@ return [
     
       // LOG ERROR SOMEWHERE !!!
     }
-  }  
+  }
 ];
