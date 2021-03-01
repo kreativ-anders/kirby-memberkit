@@ -45,16 +45,16 @@ return [
   // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X
   'getStripeCheckoutURL' => function ($tier) {
 
-    if (!isset($tier['name'])   || empty($tier['name'])   || $tier['name'] === '' || 
-        !isset($tier['price'])  || empty($tier['price'])  || $tier['price'] === '') {
+    $tierIndex = array_search($tier, array_column(option('kreativ-anders.memberkit.tiers'), 'name'), false);
 
-      throw new Exception('tier price or name is empty!');
+    if (!$tierIndex || $tierIndex < 1) {
+      throw new Exception('Tier does not exist!');
     }
 
     // CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
     $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
     $url .= '/subscribe';
-    $url .= '/' . Str::lower(Str::trim($tier['name']));
+    $url .= '/' . rawurlencode(Str::lower(Str::trim(option('kreativ-anders.memberkit.tiers')[$tierIndex]['name'])));
 
     return $url;
   },

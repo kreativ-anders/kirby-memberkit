@@ -18,12 +18,13 @@ return function ($kirby) {
 
         if (!kirby()->user()) {go();};
 
+        $tier = rawurldecode($tier);
         $tierIndex = array_search($tier, array_map("Str::lower", array_column(option('kreativ-anders.memberkit.tiers'), 'name')), false);
         $price = option('kreativ-anders.memberkit.tiers')[$tierIndex]['price'];
 
         $successURL  = kirby()->site()->url() . '/';
         $successURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/';
-        $successURL .= Str::lower($tier) . '/success';
+        $successURL .= Str::lower(rawurlencode($tier)) . '/success';
 
         $customer = kirby()->user()->stripe_customer();
 
@@ -65,7 +66,10 @@ return function ($kirby) {
         if (!kirby()->user()) {go();};
 
         $customer = kirby()->user()->stripe_customer();
-        $url = kirby()->site()->url();
+
+        $returnURL  = kirby()->site()->url() . '/';
+        $returnURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+        $returnURL .= '/portal/update';
 
         try {
 
@@ -73,7 +77,7 @@ return function ($kirby) {
           $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
           $session = $stripe->billingPortal->sessions->create([
             'customer' => $customer,
-            'return_url' => $url,
+            'return_url' => $returnURL,
           ]);
 
           $url = $session->url;
@@ -175,7 +179,6 @@ return function ($kirby) {
 
         return go(option('kreativ-anders.memberkit.successURL'));
       }
-    ]
   ];
 };
 
