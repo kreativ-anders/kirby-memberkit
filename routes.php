@@ -23,8 +23,8 @@ return function ($kirby) {
         $price = option('kreativ-anders.memberkit.tiers')[$tierIndex]['price'];
 
         $successURL  = kirby()->site()->url() . '/';
-        $successURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/';
-        $successURL .= Str::lower(rawurlencode($tier)) . '/success';
+        $successURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+        $successURL .= '/success';
 
         $customer = kirby()->user()->stripe_customer();
 
@@ -128,39 +128,24 @@ return function ($kirby) {
     ],
     // UPDATE USER AFTER SUCCESSFUL CHECKOUT
     [
-      // PATTERN --> CHECKOUT SLAG / TIER NAME / success
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/(:all)/success',
-      'action' => function ($tier) {
+      // PATTERN --> CHECKOUT SLAG / success
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/success',
+      'action' => function () {
 
         if (!kirby()->user()) {go();};
 
         $subscription = null;
 
-        /*
-        
-          Maybe there is more dynamic approach without directly checking the config array!!!
-        */
-
-        switch ($tier) {
-          case Str::lower(option('kreativ-anders.memberkit.tiers')[1]['name']):
-            $tier = option('kreativ-anders.memberkit.tiers')[1]['name'];
-            break;
-
-          case Str::lower(option('kreativ-anders.memberkit.tiers')[2]['name']):
-            $tier = option('kreativ-anders.memberkit.tiers')[2]['name'];
-            break;
-          
-          default:
-            $tier = option('kreativ-anders.memberkit.tiers')[0]['name'];
-            break;
-        }
-
         try {
 
           $customer = kirby()->user()->retrieveStripeCustomer();
           $subscription = $customer->subscriptions['data'][0];
-          
 
+          $price = $subscription->items['data'][0]->price->id;
+          $priceIndex = array_search($price, array_column(option('kreativ-anders.memberkit.tiers'), 'price'), false);
+
+          $tier = option('kreativ-anders.memberkit.tiers')[$priceIndex]['name'];
+          
           // UPDATE KIRBY USER - FREE TIER 0
           kirby()->user()->update([
             'stripe_subscription' => $subscription->id,
@@ -168,8 +153,6 @@ return function ($kirby) {
             'tier' => $tier
           ]);
 
-                      
-      
         } catch(Exception $e) {
         
           // LOG ERROR SOMEWHERE !!!
