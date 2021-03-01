@@ -68,8 +68,8 @@ return function ($kirby) {
         $customer = kirby()->user()->stripe_customer();
 
         $returnURL  = kirby()->site()->url() . '/';
-        $returnURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
-        $returnURL .= '/portal/update';
+        // $returnURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+        // $returnURL .= '/portal/update';
 
         try {
 
