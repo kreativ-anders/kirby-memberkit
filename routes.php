@@ -179,6 +179,58 @@ return function ($kirby) {
 
         return go(option('kreativ-anders.memberkit.successURL'));
       }
+    ],
+    // STRIPE WEBHOOK - OUH YEAH BABY!
+    // https://stripe.com/docs/webhooks/integration-builder
+    // --> NOT SECURED!!!
+    [
+      // PATTERN --> CHECKOUT SLAG / ACTION NAME (update)
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/webhook',
+      'action' => function () {
+
+        \Stripe\Stripe::setApiKey('sk_test_66EkZ3GZowFWgxrXszrRnSd200EmvYltOK');
+
+        $payload = @file_get_contents('php://input');
+        $event = null;
+        
+        try {
+          $event = \Stripe\Event::constructFrom(
+            json_decode($payload, true)
+          );
+        } catch(\UnexpectedValueException $e) {
+          // Invalid payload
+          echo '⚠️  Webhook error while parsing basic request.';
+          http_response_code(400);
+          exit();
+        }   
+
+        // Handle the event
+        switch ($event->type) {
+          case 'payment_intent.succeeded':
+            $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
+            // Then define and call a method to handle the successful payment intent.
+            // handlePaymentIntentSucceeded($paymentIntent);
+            break;
+          case 'payment_method.attached':
+            $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
+            // Then define and call a method to handle the successful attachment of a PaymentMethod.
+            // handlePaymentMethodAttached($paymentMethod);
+            break;
+          case 'customer.subscription.updated':
+              $subscription = $event->data->object;
+
+              break;
+          default:
+            // Unexpected event type
+            echo 'Received unknown event type';
+        }
+        http_response_code(200);
+
+        return [
+          'id' => 'succer'
+        ];
+      }
+    ],
   ];
 };
 
