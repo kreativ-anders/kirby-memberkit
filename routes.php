@@ -126,7 +126,7 @@ return function ($kirby) {
         return go();
       }
     ],
-    // UPDATE USER AFTER SUCCESSFUL CHECKOUT
+    // UPDATE/MERGE USER AFTER (SUCCESSFUL) CHECKOUT
     [
       // PATTERN --> CHECKOUT SLAG / success
       'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/success',
@@ -134,30 +134,13 @@ return function ($kirby) {
 
         if (!kirby()->user()) {go();};
 
-        $subscription = null;
-
         try {
 
-          $customer = kirby()->user()->retrieveStripeCustomer();
-          $subscription = $customer->subscriptions['data'][0];
-
-          $price = $subscription->items['data'][0]->price->id;
-          $priceIndex = array_search($price, array_column(option('kreativ-anders.memberkit.tiers'), 'price'), false);
-
-          $tier = option('kreativ-anders.memberkit.tiers')[$priceIndex]['name'];
-          
-          // UPDATE KIRBY USER - FREE TIER 0
-          kirby()->user()->update([
-            'stripe_subscription' => $subscription->id,
-            'stripe_status' => $subscription->status,
-            'tier' => $tier
-          ]);
+          kirby()->user()->mergeStripeCustomer();
 
         } catch(Exception $e) {
         
           // LOG ERROR SOMEWHERE !!!
-
-          $subscription = $e;
         }       
 
         return go(option('kreativ-anders.memberkit.successURL'));

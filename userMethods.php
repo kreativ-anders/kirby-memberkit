@@ -87,26 +87,28 @@ return [
 
     return $customer;
   },
-  // RETRIEVE STRIPE CUSTOMER SUBSCRIPTION
-  'retrieveStripeSubscription' => function () {
-
-    $subscription = $this->retrieveStripeCustomer()->subscriptions['data'][0];
-
-    return $subscription;
-  },
   // MERGE STRIPE CUSTOMER WITH KIRBY USER
   'mergeStripeCustomer' => function () {
 
-    $subscription = $this->retrieveStripeSubscription();
+    $customer = null;
 
     try {
 
-      // FIND TIER NAME
-      $price = $subscription['items']['data'][0]['price']['id'];
+      $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
+
+      // $customer = $this->retrieveStripeCustomer() // would work as well, but will fail when called within a route!
+      $customer = $stripe->customers->retrieve(
+        $this->stripe_customer(),
+        ['expand' => ['subscription']]
+      );
+
+      $subscription = $customer->subscriptions['data'][0];
+
+      $price = $subscription->items['data'][0]->price->id;
       $priceIndex = array_search($price, array_column(option('kreativ-anders.memberkit.tiers'), 'price'), false);
+
       $tier = option('kreativ-anders.memberkit.tiers')[$priceIndex]['name'];
-
-
+      
       // UPDATE KIRBY USER
       $this->update([
         'stripe_subscription' => $subscription->id,
