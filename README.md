@@ -18,7 +18,7 @@ Logic | Kirby Routes
 Felixibility | Hell yeah!
 
 #### Why no API?
-Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** what is imho not in your favor. So using routes is sofore the workaround for certain tasks.
+Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** what is imho not in your favor. So using routes is sofore the workaround for certain tasks. This alos applies to stripe webhooks. API calls to Kirby need to be authenticated which does not harmonize with stripe webhooks calls.
 
 ## Installation:
 1. Unzip the files.
