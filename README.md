@@ -21,9 +21,28 @@ Felixibility | Hell yeah!
 Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** what is imho not in your favor. So using routes is sofore the workaround for certain tasks. This alos applies to stripe webhooks. API calls to Kirby need to be authenticated which does not harmonize with stripe webhooks calls.
 
 ## Installation:
+
+### Download
 1. Unzip the files.
 1. Paste inside _../site/plugins/_.
 1. Head over to **Get Started**.
+
+### Git Submodule
+You can add the Kirby Memberkit plugin as a Git submodule as well.
+````shell
+$ cd your/project/root
+$ git submodule add https://github.com/kreativ-anders/kirby-memberkit.git site/plugins/kirby-memberkit
+$ git submodule update --init --recursive
+$ git commit -am "Add Kirby Spreadsheet"
+````
+Run these commands to update the plugin (and all other submodules):
+````shell
+$ cd your/project/root
+$ git submodule foreach git checkout master
+$ git submodule foreach git pull
+$ git commit -am "Update submodules"
+$ git submodule update --init --recursive
+````
 
 ## Get Started:
 
