@@ -16,8 +16,6 @@ return function ($kirby) {
       'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/subscribe/(:all)',
       'action' => function ($tier) {
 
-        if (!kirby()->user()) {go();};
-
         $tier = rawurldecode($tier);
         $tierIndex = array_search($tier, array_map("Str::lower", array_column(option('kreativ-anders.memberkit.tiers'), 'name')), false);
         $price = option('kreativ-anders.memberkit.tiers')[$tierIndex]['price'];
@@ -63,8 +61,6 @@ return function ($kirby) {
       'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/portal',
       'action' => function () {
 
-        if (!kirby()->user()) {go();};
-
         $customer = kirby()->user()->stripe_customer();
 
         $returnURL  = kirby()->site()->url() . '/';
@@ -96,8 +92,6 @@ return function ($kirby) {
       // PATTERN --> CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
       'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/(:all)',
       'action' => function ($tier) {
-
-        if (!kirby()->user()) {go();};
 
         $subscription = kirby()->user()->stripe_subscription();
         $email = kirby()->user()->email();
@@ -131,8 +125,6 @@ return function ($kirby) {
       // PATTERN --> CHECKOUT SLAG / success
       'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/success',
       'action' => function () {
-
-        if (!kirby()->user()) {go();};
 
         try {
 
