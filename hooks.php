@@ -66,5 +66,20 @@ return [
     
       // LOG ERROR SOMEWHERE !!!
     }
+  },
+
+  // RESERVE STRIPE ROUTES TO LOGGED-IN USERS
+  // https://getkirby.com/docs/guide/routing#before-and-after-hooks__route-before
+  'route:before' => function ($route, $path, $method) {
+
+    $subscribe = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/subscribe/');
+    $portal = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/portal');
+    $success = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/success');
+    $cancel = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/');
+
+    if (($subscribe || $portal || $success || $cancel) && !kirby()->user()) {
+      go();
+    }
   }
+
 ];
