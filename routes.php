@@ -148,6 +148,8 @@ return function ($kirby) {
 
         \Stripe\Stripe::setApiKey('sk_test_66EkZ3GZowFWgxrXszrRnSd200EmvYltOK');
 
+        // $endpoint_secret = 'whsec_VsnjOx8yRSMs7cjwFxHfw0kaj3NASwKU';
+
         $payload = @file_get_contents('php://input');
         $event = null;
         
@@ -160,34 +162,53 @@ return function ($kirby) {
           echo '⚠️  Webhook error while parsing basic request.';
           http_response_code(400);
           exit();
-        }   
+        }  
+        
+        // if ($endpoint_secret) {
+        //   // Only verify the event if there is an endpoint secret defined
+        //   // Otherwise use the basic decoded event
+        //   $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        //   try {
+        //     $event = \Stripe\Webhook::constructEvent(
+        //       $payload, $sig_header, $endpoint_secret
+        //     );
+        //   } catch(\Stripe\Exception\SignatureVerificationException $e) {
+        //     // Invalid signature
+        //     echo '⚠️  Webhook error while validating signature.';
+        //     http_response_code(400);
+        //     exit();
+        //   }
+        // }
 
         // Handle the event
         switch ($event->type) {
-          case 'payment_intent.succeeded':
-            $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
-            // Then define and call a method to handle the successful payment intent.
-            // handlePaymentIntentSucceeded($paymentIntent);
-            break;
-          case 'payment_method.attached':
-            $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
-            // Then define and call a method to handle the successful attachment of a PaymentMethod.
-            // handlePaymentMethodAttached($paymentMethod);
-            break;
-          case 'customer.subscription.updated':
-              $subscription = $event->data->object;
 
-              break;
+          case 'customer.subscription.updated':
+
+            $subscription = $event->data->object;
+
+            kirby()->site()->updateStripeSubscriptionWebhook($subscription);  
+
+            break;
+
+          case 'customer.subscription.deleted':
+
+            $subscription = $event->data->object;
+            kirby()->site()->cancelStripeSubscriptionWebhook($subscription); 
+
+
+            break;
+
           default:
             // Unexpected event type
             echo 'Received unknown event type';
         }
-        http_response_code(200);
 
-        return [
-          'id' => 'succer'
-        ];
-      }
+        // http_response_code(200);
+
+        return '<html><body>Success!</body></html>';
+      },
+      'method' => 'POST'
     ],
   ];
 };
