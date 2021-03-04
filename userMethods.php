@@ -42,6 +42,15 @@ return [
 
     return $url;
   },
+  // RETURN STRIPE WEBHOOK URL
+  'getStripeWebhookURL' => function () {
+
+    // CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
+    $url =  Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url .= '/webhook';
+
+    return $url;
+  },
   // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X
   'getStripeCheckoutURL' => function ($tier) {
 
