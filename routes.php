@@ -199,6 +199,15 @@ return function ($kirby) {
 
             break;
 
+          case 'customer.updated':
+
+            $customer = $event->data->object;
+            kirby()->site()->updateStripeEmailWebhook($customer); 
+
+            break;
+
+          
+
           default:
             // Unexpected event type
             echo 'Received unknown event type';
