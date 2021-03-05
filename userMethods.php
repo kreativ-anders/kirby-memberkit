@@ -8,26 +8,8 @@
 
 return [
 
-  'subscripe' => function ($tier) {
-
-    /*
-      This might be great for user experience, but it is painful regarding process variants.
-      More variants yield more complexity. Keep it simple and stupid.
-
-      => Cancel subscription and subscripe to new one (Upgrade & Downgrade)
-
-      Furthermore, it requires you to know the payment information. Sensetive data like this should be handled via Stripe´s checkout.
-      In case the user is already subscribed to a tier you might have the payment information, but as mentioned earlier - 
-      This increase the process variants that need to be considered.
-
-      https://stripe.com/docs/billing/subscriptions/upgrade-downgrade
-    */
-    return false;
-  },
   // RETURN STRIPE SUBSCRIPTION CANCEL URL
   'getStripeCancelURL' => function () {
-
-    $subscription = null;
 
     if ($this->stripe_subscription()->isEmpty()) {
 
@@ -43,22 +25,23 @@ return [
   // RETURN STRIPE WEBHOOK URL
   'getStripeWebhookURL' => function () {
 
-    // CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
+    // BUILD URL => CHECKOUT SLAG / ACTION NAME (WEBHOOK)
     $url =  Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
     $url .= '/webhook';
 
     return $url;
   },
-  // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X
+  // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X (NAME AS PARAMETER)
   'getStripeCheckoutURL' => function ($tier) {
 
+    // SEARCH TIER NAME AND CHECK FOR EXISTENCE
     $tierIndex = array_search($tier, array_column(option('kreativ-anders.memberkit.tiers'), 'name'), false);
-
     if (!$tierIndex || $tierIndex < 1) {
+
       throw new Exception('Tier does not exist!');
     }
 
-    // CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
+    // BUILD URL => CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
     $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
     $url .= '/subscribe';
     $url .= '/' . rawurlencode(Str::lower(Str::trim(option('kreativ-anders.memberkit.tiers')[$tierIndex]['name'])));
