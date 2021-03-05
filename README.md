@@ -8,12 +8,23 @@
 * [Support](#support)  
 
 ## What do you get?
-A Kirby User Membership Plug-In (Pre-Release) powered by Stripe for Kirby CMS.
+A Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](https://stripe.com/) for Kirby CMS.
+
+## Behind the scenes:
 
 **Function** | **Trigger** | **Logic** | **Comment**
 ---- | ---- | ---- | ----
-Create a stripe user | A new kirby user has been created | [Kirby Hooks](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php): user.create:after | Save stripe customer id (*stripe_customer*) in kirby user and set subscription tier name (*tier*) to root tier ([Learn more about the tiers](#subscription-tiers))
----- | ---- | ---- | ----
+
+Create stripe product(s) | Manual | [Stripe Products Dashboard](https://dashboard.stripe.com/products) | Here, you also add the prices inclusively the payment intervals (subscriptions), e.g. 1€/Month or 10€/Year. 
+
+Configure subscription tier(s) | Manual | [Kirby Options](https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php) | Every price you create yield a distinct API-ID that is required in your kirby config.php. ([Learn more about subscription tiers](#subscription-tiers))
+
+Create a stripe user | Automatic | [Kirby Hooks: user.create:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | Creates a stripe customer and store the stripe customer id (*stripe_customer*) and the root subscription tier name (*tier*) in the kirby user information.
+
+Update stripe user email | Automatic | [Kirby Hooks: user.changeEmail:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | 
+
+
+
 Subscribtion | Stripe Checkout
 Change Subscribtion | Stripe Billing Portal
 Cancel Subscribtion | Stripe Billing Portal
@@ -74,9 +85,6 @@ $ git submodule update --init --recursive
 ],
 ````
 
->The tier array need to be in an ordered sequence! => Lowest tier first and highest tier last. The tiers config is a 2D-array that needs to be ordererd hierarchical. The first index is always the entry/default tier after registration. Due to consistency the tier on index 0 holds a price, but it is never ever checked, so keep it null. All the following tiers need to be greater than the one before, e.g., FREE --> BASIC --> PREMIUM --> SUPER DELUXE etc.
-
-You have to maintain **all** price entries (intervals) within one product in your config.php file.
 
 ### Testing
 
@@ -133,6 +141,10 @@ snippet('stripe-checkout-button', [ 'id'      => 'basic-checkout-button'
 > The snippet also includes the required JavaScript to initialize the checkout and redirect to Stripe itself.
 
 ## Subscription Tiers
+
+The subscription tier is an array and need to be in an ordered sequence! => Lowest tier first and highest tier last. The tiers config is a 2D-array that needs to be ordererd hierarchical. The first index is always the entry/default tier after registration. Due to consistency the tier on index 0 holds a price, but it is never ever checked, so keep it null. All the following tiers need to be greater than the one before, e.g., FREE --> BASIC --> PREMIUM --> SUPER DELUXE etc.
+
+You have to maintain **all** price entries (intervals) within one product in your config.php file.
 
 ### Payment Intervals for subscriptions
 The payment interval depends on the price_id within stripe. In case you are creating a product with a price X with an interval of every 6 months stripe checkout will adapt to this - that´s pretty neat imho. This enables you to create mutliple payment intervals that look like the following in the config.php:
