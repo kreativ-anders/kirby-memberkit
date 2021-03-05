@@ -8,7 +8,7 @@
 
 return [
 
-  // UPDATE STRIPE SUBSCRIPTION VIA WEBHOOK
+  // UPDATE STRIPE SUBSCRIPTION VIA WEBHOOK ------------------------------------------------------------------------------------------
   'updateStripeSubscriptionWebhook' => function ($subscription) {
 
     $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
@@ -52,7 +52,7 @@ return [
     
     $kirby->impersonate();        
   },
-  // CANCEL STRIPE SUBSCRIPTION VIA WEBHOOK
+  // CANCEL STRIPE SUBSCRIPTION VIA WEBHOOK -----------------------------------------------------------------------------------------
   'cancelStripeSubscriptionWebhook' => function ($subscription) {
 
     $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
@@ -88,7 +88,7 @@ return [
 
     $kirby->impersonate();    
   },
-  // UPDATE KIRBY USER EMAIL VIA STRIPE WEBHOOK
+  // UPDATE KIRBY USER EMAIL VIA STRIPE WEBHOOK --------------------------------------------------------------------------------------
   'updateStripeEmailWebhook' => function ($customer) {
 
     $kirby = kirby();

@@ -8,7 +8,7 @@
 
 return [
 
-  // RETURN STRIPE SUBSCRIPTION CANCEL URL
+  // RETURN STRIPE SUBSCRIPTION CANCEL URL ---------------------------------------------------------------------------------
   'getStripeCancelURL' => function () {
 
     if ($this->stripe_subscription()->isEmpty()) {
@@ -31,7 +31,7 @@ return [
 
     return $url;
   },
-  // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X (NAME AS PARAMETER)
+  // RETURN STRIPE SUBSCRIPTION CHECKOUT URL FOR TIER X (NAME AS PARAMETER) -----------------------------------------------------
   'getStripeCheckoutURL' => function ($tier) {
 
     // SEARCH TIER NAME AND CHECK FOR EXISTENCE
@@ -48,7 +48,7 @@ return [
 
     return $url;
   },
-  // RETURN STRIPE CUSTOMER PORTAL URL
+  // RETURN STRIPE CUSTOMER PORTAL URL -------------------------------------------------------------------------------------------
   'getStripePortalURL' => function () {
 
     // BUILD URL => STRIPE SLUG / ACTION NAME (PORTAL)
@@ -57,7 +57,7 @@ return [
 
     return $url;
   },
-  // RETRIEVE STRIPE CUSTOMER (WITH SUBSCRIPTIONS)
+  // RETRIEVE STRIPE CUSTOMER (WITH SUBSCRIPTIONS) -------------------------------------------------------------------------------
   'retrieveStripeCustomer' => function () {
 
     if (!option('debug')) {
@@ -84,7 +84,7 @@ return [
 
     return $customer;
   },
-  // MERGE STRIPE CUSTOMER WITH KIRBY USER
+  // MERGE STRIPE CUSTOMER WITH KIRBY USER ----------------------------------------------------------------------------------------
   'mergeStripeCustomer' => function () {
 
     $stripe = new \Stripe\StripeClient(option('kreativ-anders.memberkit.secretKey'));
@@ -130,7 +130,7 @@ return [
 
     return false;
   },
-  // CHECK USER PRIVILEGES BASED ON TIER (INDEX)
+  // CHECK USER PRIVILEGES BASED ON TIER (INDEX) -----------------------------------------------------------------------------
   'isAllowed' => function ($tier) {
 
     $userTier = $this->tier()->toString();
