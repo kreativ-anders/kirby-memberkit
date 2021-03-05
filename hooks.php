@@ -75,7 +75,12 @@ return [
     $subscribe = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/subscribe/');
     $portal = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/portal');
     $success = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/success');
-    $cancel = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/');
+    $cancel = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/subscription');
+
+    if ($cancel && !option('debug')) {
+
+      throw new Exception('Cancel stripe subscription via URL is only available in debug mode!');
+    }
 
     if (($subscribe || $portal || $success || $cancel) && !kirby()->user()) {
       go();

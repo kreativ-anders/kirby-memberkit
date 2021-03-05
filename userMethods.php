@@ -34,10 +34,9 @@ return [
       throw new Exception('No subscription to cancel!');
     }
 
-    // CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
+    // BUILD URL => CHECKOUT SLAG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
     $url =  Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
-    $url .= '/cancel';
-    $url .= '/' . Str::lower(Str::trim($this->tier()));   
+    $url .= '/cancel/subscription';   
 
     return $url;
   },

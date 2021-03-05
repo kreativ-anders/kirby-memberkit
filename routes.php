@@ -89,9 +89,9 @@ return function ($kirby) {
     ],
     // CANCEL STRIPE SUBSCRIPTION
     [
-      // PATTERN --> CHECKOUT SLAG / ACTION NAME (CANCEL) / STRIPE TIER NAME
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/(:all)',
-      'action' => function ($tier) {
+      // PATTERN --> CHECKOUT SLAG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/subscription',
+      'action' => function () {
 
         $subscription = kirby()->user()->stripe_subscription();
         $email = kirby()->user()->email();
