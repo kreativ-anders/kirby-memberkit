@@ -4,7 +4,6 @@
   USER-METHODS
   ----
   https://getkirby.com/docs/reference/plugins/extensions/user-methods
-
 */
 
 return [

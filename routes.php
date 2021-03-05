@@ -146,7 +146,7 @@ return function ($kirby) {
       'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/webhook',
       'action' => function () {
 
-        \Stripe\Stripe::setApiKey('sk_test_66EkZ3GZowFWgxrXszrRnSd200EmvYltOK');
+        \Stripe\Stripe::setApiKey(option('kreativ-anders.memberkit.secretKey'));
 
         // $endpoint_secret = 'whsec_VsnjOx8yRSMs7cjwFxHfw0kaj3NASwKU';
 
