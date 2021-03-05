@@ -162,7 +162,7 @@ return function ($kirby) {
 
         \Stripe\Stripe::setApiKey(option('kreativ-anders.memberkit.secretKey'));
 
-        $endpoint_secret = 'whsec_VsnjOx8yRSMs7cjwFxHfw0kaj3NASwKU';
+        $endpoint_secret = option('kreativ-anders.memberkit.webhookSecret');
 
         $payload = @file_get_contents('php://input');
         $event = null;
@@ -179,17 +179,19 @@ return function ($kirby) {
           exit();
         }  
         
+        // VERIFY ENPOINT INTEGRITY
         if ($endpoint_secret) {
-          // Only verify the event if there is an endpoint secret defined
-          // Otherwise use the basic decoded event
+
           $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+
           try {
+
             $event = \Stripe\Webhook::constructEvent(
               $payload, $sig_header, $endpoint_secret
             );
+
           } catch(\Stripe\Exception\SignatureVerificationException $e) {
-            // Invalid signature
-            echo '⚠️  Webhook error while validating signature.';
+
             http_response_code(400);
             exit();
           }

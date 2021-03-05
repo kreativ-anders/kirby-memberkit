@@ -11,6 +11,7 @@ return [
 
   'secretKey'     => 'sk_test_xxx',
   'publicKey'     => 'pk_test_xxx',
+  'webhookSecret' => 'whsec_xxx',
   'stripeURLSlug' => 'checkout',
   'successURL'    => '../success',
   'cancelURL'     => '../cancel',
