@@ -41,7 +41,7 @@ return [
       throw new Exception('Tier does not exist!');
     }
 
-    // BUILD URL => STRIPE SLUG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
+    // BUILD URL => STRIPE SLUG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME (RAWURLENCODED)
     $url  = Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/subscribe';
     $url .= '/' . rawurlencode(Str::lower(Str::trim(option('kreativ-anders.memberkit.tiers')[$tierIndex]['name'])));

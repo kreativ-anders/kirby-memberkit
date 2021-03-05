@@ -12,7 +12,7 @@ return function ($kirby) {
     
     // CREATE STRIPE CHECKOUT SESSION
     [
-      // PATTERN --> STRIPE SLUG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
+      // PATTERN --> STRIPE SLUG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME (RAWURLENCODED)
       'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/subscribe/(:all)',
       'action' => function ($tier) {
 
