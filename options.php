@@ -11,7 +11,7 @@ return [
 
   'secretKey'     => 'sk_test_xxx',
   'publicKey'     => 'pk_test_xxx',
-  'checkoutSlag'  => 'checkout',
+  'stripeURLSlug' => 'checkout',
   'successURL'    => '../success',
   'cancelURL'     => '../cancel',
 

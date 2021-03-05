@@ -17,7 +17,7 @@ return [
     }
 
     // BUILD URL => CHECKOUT SLAG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
-    $url =  Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url =  Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/cancel/subscription';   
 
     return $url;
@@ -26,7 +26,7 @@ return [
   'getStripeWebhookURL' => function () {
 
     // BUILD URL => CHECKOUT SLAG / ACTION NAME (WEBHOOK)
-    $url =  Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url =  Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/webhook';
 
     return $url;
@@ -42,7 +42,7 @@ return [
     }
 
     // BUILD URL => CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
-    $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url  = Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/subscribe';
     $url .= '/' . rawurlencode(Str::lower(Str::trim(option('kreativ-anders.memberkit.tiers')[$tierIndex]['name'])));
 
@@ -52,7 +52,7 @@ return [
   'getStripePortalURL' => function () {
 
     // CHECKOUT SLAG / STRIPE PORTAL
-    $url  = Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+    $url  = Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/portal';
 
     return $url;

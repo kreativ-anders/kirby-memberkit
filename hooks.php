@@ -72,10 +72,10 @@ return [
   // https://getkirby.com/docs/guide/routing#before-and-after-hooks__route-before
   'route:before' => function ($route, $path, $method) {
 
-    $subscribe = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/subscribe/');
-    $portal = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/portal');
-    $success = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/success');
-    $cancel = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/subscription');
+    $subscribe = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/subscribe/');
+    $portal = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/portal');
+    $success = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/success');
+    $cancel = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/cancel/subscription');
 
     if ($cancel && !option('debug')) {
 

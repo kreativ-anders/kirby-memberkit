@@ -13,7 +13,7 @@ return function ($kirby) {
     // CREATE STRIPE CHECKOUT SESSION
     [
       // PATTERN --> CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/subscribe/(:all)',
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/subscribe/(:all)',
       'action' => function ($tier) {
 
         $tier = rawurldecode($tier);
@@ -21,7 +21,7 @@ return function ($kirby) {
         $price = option('kreativ-anders.memberkit.tiers')[$tierIndex]['price'];
 
         $successURL  = kirby()->site()->url() . '/';
-        $successURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+        $successURL .= Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
         $successURL .= '/success';
 
         $customer = kirby()->user()->stripe_customer();
@@ -58,13 +58,13 @@ return function ($kirby) {
     // CREATE STRIPE CUSTOMER PORTAL SESSION
     [
       // PATTERN --> CHECKOUT SLAG / STRIPE PORTAL
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/portal',
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/portal',
       'action' => function () {
 
         $customer = kirby()->user()->stripe_customer();
 
         $returnURL  = kirby()->site()->url() . '/';
-        // $returnURL .= Str::lower(option('kreativ-anders.memberkit.checkoutSlag'));
+        // $returnURL .= Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
         // $returnURL .= '/portal/update';
 
         try {
@@ -90,7 +90,7 @@ return function ($kirby) {
     // CANCEL STRIPE SUBSCRIPTION
     [
       // PATTERN --> CHECKOUT SLAG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/cancel/subscription',
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/cancel/subscription',
       'action' => function () {
 
         $subscription = kirby()->user()->stripe_subscription();
@@ -123,7 +123,7 @@ return function ($kirby) {
     // UPDATE/MERGE USER AFTER (SUCCESSFUL) CHECKOUT
     [
       // PATTERN --> CHECKOUT SLAG / success
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/success',
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/success',
       'action' => function () {
 
         try {
@@ -143,7 +143,7 @@ return function ($kirby) {
     // --> NOT SECURED!!!
     [
       // PATTERN --> CHECKOUT SLAG / ACTION NAME (update)
-      'pattern' => Str::lower(option('kreativ-anders.memberkit.checkoutSlag')) . '/webhook',
+      'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/webhook',
       'action' => function () {
 
         \Stripe\Stripe::setApiKey(option('kreativ-anders.memberkit.secretKey'));
