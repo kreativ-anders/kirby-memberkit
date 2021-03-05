@@ -1,17 +1,17 @@
 # Kirby Memberkit Plug-In (Pre-Release)
 
 * [What do you get?](#what-do-you-get)
-* [Why an Add-On?](#why-an-add-on)
+* [Functional Overview?](#function-overview)
 * [Installation](#installation)
+* [Get Started](#get-started)
 * [Notes](#notes)
     * [Kirby CMS Licence](#kirby-cms-licence)
 * [Support](#support)  
 
 ## What do you get?
-A versatile Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](https://stripe.com/) for Kirby CMS.
+A versatile Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](https://stripe.com/) for [Kirby CMS](https://getkirby.com).
 
-
-## Abstract Overview:
+## Function Overview:
 
 **Function** | **Trigger** | **Logic** | **Comment**
 ---- | ---- | ---- | ----
@@ -26,28 +26,28 @@ Check user(s) permission | Manual/Automatic | [Kirby User methods: isAllowed($ti
 Cancel user(s) subscription | Automatic | [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) [Kirby Routes](https://github.com/kreativ-anders/kirby-memberkit/blob/main/routes.php) [Kirby User methods: getStripeCancelURL()](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php) | For debug purposes it is also possible to cancel a user subscription by redirecting to an URL (works only in debug mode). The best approach is to redirect the user to the stripe customer portal.
 Keep everything in sync | Automatic | [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) [Kirby Routes](https://github.com/kreativ-anders/kirby-memberkit/blob/main/routes.php) [Kirby Site methods: updateStripeSubscriptionWebhook($subscription) cancelStripeSubscriptionWebhook($subscription) updateStripeEmailWebhook($customer)](https://github.com/kreativ-anders/kirby-memberkit/blob/main/siteMethods.php) | Changes within the [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) are comunicated via webhook notifications from stripe to a defined route that performs the corresponding actions. 
 
-
-#### Why no API?
-Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** what is imho not in your favor. So using routes is sofore the workaround for certain tasks. This alss applies to stripe webhooks. API calls to Kirby need to be authenticated which does not harmonize with stripe webhooks calls.
+### Why no API?
+Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** permission what is imho not in your favor. So using routes is sofore the workaround for certain tasks. This also applies to stripe webhooks. API calls to Kirby need to be authenticated which does not comply with stripe webhooks calls.
 
 ## Installation:
 
 ### Download
+1. Download latest release.
 1. Unzip the files.
 1. Paste inside _../site/plugins/_.
-1. Head over to **Get Started**.
+1. Head over to **[Get Started](#get-started)**.
 
 ### Git Submodule
-You can add the Kirby Memberkit plugin as a Git submodule as well.
+You can add the Kirby Memberkit Plug-In as a git submodule as well:
 ````shell
-$ cd your/project/root
+$ cd YOUR/PROJECT/ROOT
 $ git submodule add https://github.com/kreativ-anders/kirby-memberkit.git site/plugins/kirby-memberkit
 $ git submodule update --init --recursive
-$ git commit -am "Add Kirby Spreadsheet"
+$ git commit -am "Add Kirby Memberkit"
 ````
-Run these commands to update the plugin (and all other submodules):
+Run these commands to update the Plug-In (and all other submodules):
 ````shell
-$ cd your/project/root
+$ cd YOUR/PROJECT/ROOT
 $ git submodule foreach git checkout master
 $ git submodule foreach git pull
 $ git commit -am "Update submodules"
@@ -56,18 +56,83 @@ $ git submodule update --init --recursive
 
 ## Get Started:
 
->Get familiar with [Stripe Checkout](https://stripe.com/de/payments/checkout) and also check the respective Docs of [Stripe Checkout](https://stripe.com/docs/payments/checkout) and [Stripe Customer Portal](https://stripe.com/docs/billing/subscriptions/customer-portal) before heading on .
+Before diving deep, become familiar with [Stripe Checkout](https://stripe.com/de/payments/checkout) and also check the respective Docs of [Stripe Checkout](https://stripe.com/docs/payments/checkout) and [Stripe Customer Portal](https://stripe.com/docs/billing/subscriptions/customer-portal).
 
-### Set configs
+### Stripe Dashboard
+
+* [Create Products on Stripe](https://dashboard.stripe.com/products)
+  * Add **prices** to the product(s)
+* [Configure Stripe Customer Portal](https://dashboard.stripe.com/settings/billing/portal)
+* [Set up an endpoint for Stripe Webhooks](https://dashboard.stripe.com/webhooks)
+  * The (default) URL looks like "https://YOUR-DOMAIN.TLD/stripe-checkout/webhook" 
+
+### config.php
+
+#### Set stripe API keys
+````php
+'kreativ-anders.memberkit.secretKey'     => 'sk_test_xxxx',
+'kreativ-anders.memberkit.publicKey'     => 'pk_test_xxxx',
+````
+#### Overwrite stripe URL slug (optional)
+This setting is just an additional layer to create collision free routes/URLs like "https://YOUR-DOMAIN.TLD/stripe-checkout/portal"
+````php
+'kreativ-anders.memberkit.stripeURLSlug' => 'stripe-checkout',
+````
+#### Set cancel/success URLs
+Those pages do not exist! You need to create them by yourself. This is a create opportunity to welcome user after they successfully subsrcibed to a tier or show them help when they canceled the stripe checkout process.
+````php
+'kreativ-anders.memberkit.successURL'    => 'https://YOUR-DOMAIN.TLD/success',
+'kreativ-anders.memberkit.cancelURL'     => 'https://YOUR-DOMAIN.TLD/cancel',
+````
+#### Set stripe webhook secret
+To keep everything (securly) in sync it is important to set a webhook secret. 
+
+#### Set subscription tiers
+This is now the heart of the whole setting part. The subscription tier is a 2D-array and need to be in an ordered sequence. This means the lowest tier is first (Free) and highest tier last (Premium). The first index is always the entry/default tier after registration/cancelation. 
+
+> Due to consistency the tier on index 0 holds a price, but it is never ever checked, so keep it null. Again, all the following tiers need to be greater than the previous one, e.g., FREE --> BASIC --> PREMIUM --> SUPER DELUXE.
+
+You also have to maintain **all** price API-IDs (payment intervals) within one product that have been created within stripe dashboard.
+##### Basic Example
+````php
+'kreativ-anders.memberkit.tiers'         => [
+  [ 'name'  => 'Free'
+   ,'price' => null],
+  [ 'name'  => 'Basic'
+   ,'price' => 'price_xxxx'],
+  [ 'name'  => 'Premium'
+   ,'price' => ''],
+],
+````
+##### Creative (Crazy) Example
+````php
+'kreativ-anders.memberkit.tiers' => [
+    [ 'name'  => 'Free'
+     ,'price' => null],
+    [ 'name'  => 'Basic - Daily'
+     ,'price' => 'price_xxxabc'],
+    [ 'name'  => 'Basic - Weekly'
+     ,'price' => 'price_xxxdef'],
+    [ 'name'  => 'Premium - Monthly'
+     ,'price' => 'price_yyyghi'],
+    [ 'name'  => 'Premium - Biannual'
+     ,'price' => 'price_yyyjkl'],
+    [ 'name'  => 'Deluxe - Yearly'
+     ,'price' => 'price_zzzmno'],
+    [ 'name'  => 'Deluxe - Custom'
+     ,'price' => 'price_yyyopq'],
+  ],
+````
+
 
 ````php
-'kreativ-anders.stripekit.secretKey'     => 'sk_test_xxxx',
-'kreativ-anders.stripekit.publicKey'     => 'pk_test_xxxx',
-'kreativ-anders.stripekit.webhookSecret' => 'whsec_xxx',
-'kreativ-anders.stripekit.checkoutSlag'  => 'stripe-checkout',
-'kreativ-anders.stripekit.successURL'    => 'https://*DOMAIN*/success',
-'kreativ-anders.stripekit.cancelURL'     => 'https://*DOMAIN*/cancel',
-'kreativ-anders.stripekit.tiers'         => [
+'kreativ-anders.memberkit.secretKey'     => 'sk_test_xxxx',
+'kreativ-anders.memberkit.publicKey'     => 'pk_test_xxxx',
+'kreativ-anders.memberkit.webhookSecret' => 'whsec_xxx',
+'kreativ-anders.memberkit.stripeURLSlug' => 'stripe-checkout',
+'kreativ-anders.memberkit.successURL'    => 'https://*DOMAIN*/success',
+'kreativ-anders.memberkit.cancelURL'     => 'https://*DOMAIN*/cancel',
+'kreativ-anders.memberkit.tiers'         => [
   [ 'name'  => 'Free'
    ,'price' => null],
   [ 'name'  => 'Basic'
@@ -91,7 +156,7 @@ Afterwards, the Terminal prompts line like this:
 Maintain this code within your config.php:
 
 ````php
-'kreativ-anders.stripekit.webhookSecret' => 'whsec_xxx',
+'kreativ-anders.memberkit.webhookSecret' => 'whsec_xxx',
 ````
 
 ### Going Live
@@ -116,7 +181,7 @@ The same applies for users email changes and users deletion!
 > This is handled via a route 😉 in the background. 
 
 ````php
-$url = $kirby->user()->getStripeCheckoutURL( option('kreativ-anders.stripekit.tiers')[1]);
+$url = $kirby->user()->getStripeCheckoutURL( option('kreativ-anders.memberkit.tiers')[1]);
 ````
 
 2. Create a stripe checkout button:
@@ -134,9 +199,7 @@ snippet('stripe-checkout-button', [ 'id'      => 'basic-checkout-button'
 
 ## Subscription Tiers
 
-The subscription tier is an array and need to be in an ordered sequence! => Lowest tier first and highest tier last. The tiers config is a 2D-array that needs to be ordererd hierarchical. The first index is always the entry/default tier after registration. Due to consistency the tier on index 0 holds a price, but it is never ever checked, so keep it null. All the following tiers need to be greater than the one before, e.g., FREE --> BASIC --> PREMIUM --> SUPER DELUXE etc.
 
-You have to maintain **all** price entries (intervals) within one product in your config.php file.
 
 ### Payment Intervals for subscriptions
 The payment interval depends on the price_id within stripe. In case you are creating a product with a price X with an interval of every 6 months stripe checkout will adapt to this - that´s pretty neat imho. This enables you to create mutliple payment intervals that look like the following in the config.php:
@@ -179,7 +242,7 @@ The payment interval depends on the price_id within stripe. In case you are crea
 ### Show/Hide functions or text based on subscribed tier
 
 ````php
-<?php if ($kirby->user() && $kirby->user()->isAllowed(option('kreativ-anders.stripekit.tiers')[1]['name'])): ?>
+<?php if ($kirby->user() && $kirby->user()->isAllowed(option('kreativ-anders.memberkit.tiers')[1]['name'])): ?>
 <p>
   Basic visible
 </p>
