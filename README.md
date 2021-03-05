@@ -10,9 +10,10 @@
 ## What do you get?
 A Kirby User Membership Plug-In (Pre-Release) powered by Stripe for Kirby CMS.
 
-**Function** | **Trigger** | **Kirby Logic** | **Comment**
+**Function** | **Trigger** | **Logic** | **Comment**
 ---- | ---- | ---- | ----
-Create a stripe user | A new kirby user has been created | [Hooks](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) -> user.create:after | Save stripe customer id (*stripe_customer*) in kirby user and set subscription tier name (*tier*) to root tier ([Learn more about the tiers](#subscription-tiers))
+Create a stripe user | A new kirby user has been created | [Kirby Hooks](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php): user.create:after | Save stripe customer id (*stripe_customer*) in kirby user and set subscription tier name (*tier*) to root tier ([Learn more about the tiers](#subscription-tiers))
+---- | ---- | ---- | ----
 Subscribtion | Stripe Checkout
 Change Subscribtion | Stripe Billing Portal
 Cancel Subscribtion | Stripe Billing Portal
