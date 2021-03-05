@@ -8,28 +8,24 @@
 * [Support](#support)  
 
 ## What do you get?
-A Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](https://stripe.com/) for Kirby CMS.
+A versatile Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](https://stripe.com/) for Kirby CMS.
 
-## Behind the scenes:
+
+## Abstract Overview:
 
 **Function** | **Trigger** | **Logic** | **Comment**
 ---- | ---- | ---- | ----
 Create stripe product(s) | Manual | [Stripe Products Dashboard](https://dashboard.stripe.com/products) | Here, you also add the prices inclusively the payment intervals (subscriptions), e.g. 1€/Month or 10€/Year. 
 Configure subscription tier(s) | Manual | [Kirby Options](https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php) | Every price you create yield a distinct API-ID that is required in your kirby config.php. ([Learn more about subscription tiers](#subscription-tiers))
-Create a stripe user | Automatic | [Kirby Hooks: user.create:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | Creates a stripe customer and store the stripe customer id (*stripe_customer*) and the root subscription tier name (*tier*) in the kirby user information.
-Update stripe user email | Automatic | [Kirby Hooks: user.changeEmail:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | 
+Create stripe user(s) | Automatic | [Kirby Hooks: user.create:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | Creates a stripe customer and store the stripe customer id (*stripe_customer*) and the root subscription tier name (*tier*) in the kirby user information.
+Update stripe user(s) email | Automatic | [Kirby Hooks: user.changeEmail:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | 
+Delete stripe user(s) | Automatic | [Kirby Hooks: user.delete:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | The customer's billing information will be permanently removed from stripe and all current subscriptions will be immediately cancelled. But processed payments and invoices associated with the customer will remain. 
+Subscribe user(s) | Manual/Automatic | [Kirby User methods: getStripeCheckoutURL($tier) mergeStripeCustomer()](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php) [Kirby Routes](https://github.com/kreativ-anders/kirby-memberkit/blob/main/routes.php) [Kirby Snippets](https://github.com/kreativ-anders/kirby-memberkit/blob/main/snippets/stripe-checkout-button.php) | You can generate a distinct URL for a specific tier (with the according payment interval) and pass it to the snippet which creates the checkout button. On click the route generates a dedicated session and redirects to stripe checkout page. After successful checkout an inbetween route handles the merge of the stripe user with the kirby user.
+Manage user(s) subscription | Automatic | [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) [Kirby User methods: getStripePortalURL()](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php) | Actions that are allowed to be performed can be set in [Stripe Customer Portal Dashboard](https://dashboard.stripe.com/settings/billing/portal), e.g. payment interval or change email address. Most of the actions should be working, but do not activate the option to change the quantity at the moment.
+Check user(s) permission | Manual/Automatic | [Kirby User methods: isAllowed($tier)](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php) | Compare the parameter ($tier) with the users tier based on the index of the tiers config order.
+Cancel user(s) subscription | Automatic | [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) [Kirby Routes](https://github.com/kreativ-anders/kirby-memberkit/blob/main/routes.php) [Kirby User methods: getStripeCancelURL()](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php) | For debug purposes it is also possible to cancel a user subscription by redirecting to an URL (works only in debug mode). The best approach is to redirect the user to the stripe customer portal.
+Keep everything in sync | Automatic | [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) [Kirby Routes](https://github.com/kreativ-anders/kirby-memberkit/blob/main/routes.php) [Kirby Site methods: updateStripeSubscriptionWebhook($subscription) cancelStripeSubscriptionWebhook($subscription) updateStripeEmailWebhook($customer)](https://github.com/kreativ-anders/kirby-memberkit/blob/main/siteMethods.php) | Changes within the [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) are comunicated via webhook notifications from stripe to a defined route that performs the corresponding actions. 
 
-
-
-Subscribtion | Stripe Checkout
-Change Subscribtion | Stripe Billing Portal
-Cancel Subscribtion | Stripe Billing Portal
-Tiers| Endless
-Pricing | Individual
-User Privileges | Kirby User Method
-CSS | Nope
-Logic | Kirby Routes
-Felixibility | Hell yeah!
 
 #### Why no API?
 Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** what is imho not in your favor. So using routes is sofore the workaround for certain tasks. This alss applies to stripe webhooks. API calls to Kirby need to be authenticated which does not harmonize with stripe webhooks calls.
