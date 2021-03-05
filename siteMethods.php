@@ -15,7 +15,7 @@ return [
 
     try {
 
-      // GET STRIPE CUSTOMER 
+      // RETRIEVE STRIPE CUSTOMER 
       $customer = $stripe->customers->retrieve(
         $subscription->customer,
         []
