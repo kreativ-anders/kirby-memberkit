@@ -120,6 +120,8 @@ return [
         'tier' => $tier
       ]);
 
+      $this->changeEmail($customer->email);
+
       return true;
 
     } catch (Exception $e) {
