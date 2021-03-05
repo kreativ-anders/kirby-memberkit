@@ -4,6 +4,8 @@
 * [Functional Overview?](#function-overview)
 * [Installation](#installation)
 * [Get Started](#get-started)
+* [Test](#test)
+* [Examples](#examples)
 * [Notes](#notes)
     * [Kirby CMS Licence](#kirby-cms-licence)
 * [Support](#support)  
@@ -16,7 +18,7 @@ A versatile Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](http
 **Function** | **Trigger** | **Logic** | **Comment**
 ---- | ---- | ---- | ----
 Create stripe product(s) | Manual | [Stripe Products Dashboard](https://dashboard.stripe.com/products) | Here, you also add the prices inclusively the payment intervals (subscriptions), e.g. 1€/Month or 10€/Year. 
-Configure subscription tier(s) | Manual | [Kirby Options](https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php) | Every price you create yield a distinct API-ID that is required in your kirby config.php. ([Learn more about subscription tiers](#subscription-tiers))
+Configure subscription tier(s) | Manual | [Kirby Options](https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php) | Every price you create yield a distinct API-ID that is required in your kirby config.php. ([Learn more about subscription tiers](#set-subscription-tiers))
 Create stripe user(s) | Automatic | [Kirby Hooks: user.create:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | Creates a stripe customer and store the stripe customer id (*stripe_customer*) and the root subscription tier name (*tier*) in the kirby user information.
 Update stripe user(s) email | Automatic | [Kirby Hooks: user.changeEmail:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | 
 Delete stripe user(s) | Automatic | [Kirby Hooks: user.delete:after](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) | The customer's billing information will be permanently removed from stripe and all current subscriptions will be immediately cancelled. But processed payments and invoices associated with the customer will remain. 
@@ -64,7 +66,7 @@ Before diving deep, become familiar with [Stripe Checkout](https://stripe.com/de
   * Add **prices** to the product(s)
 * [Configure Stripe Customer Portal](https://dashboard.stripe.com/settings/billing/portal)
 * [Set up an endpoint for Stripe Webhooks](https://dashboard.stripe.com/webhooks)
-  * The (default) URL looks like "https://YOUR-DOMAIN.TLD/stripe-checkout/webhook" 
+  * The (default) URL looks like "https://YOUR-DOMAIN.TLD/stripe-checkout/webhook" (See [Overwrite stripe URL slug (optional)](#overwrite-stripe-url-slug-optional) to change "stripe-checkout".)
 
 ### config.php
 
@@ -86,6 +88,9 @@ Those pages do not exist! You need to create them by yourself. This is a create 
 ````
 #### Set stripe webhook secret
 To keep everything (securly) in sync it is important to set a webhook secret. 
+````php
+'kreativ-anders.memberkit.webhookSecret'    => 'https://YOUR-DOMAIN.TLD/success',
+````
 
 #### Set subscription tiers
 This is now the heart of the whole setting part. The subscription tier is a 2D-array and need to be in an ordered sequence. This means the lowest tier is first (Free) and highest tier last (Premium). The first index is always the entry/default tier after registration/cancelation. 
@@ -105,8 +110,11 @@ You also have to maintain **all** price API-IDs (payment intervals) within one p
 ],
 ````
 ##### Creative (Crazy) Example
+
+> I really hope nobody will ever dare to do something like this!
+
 ````php
-'kreativ-anders.memberkit.tiers' => [
+'kreativ-anders.memberkit.tiers'         => [
     [ 'name'  => 'Free'
      ,'price' => null],
     [ 'name'  => 'Basic - Daily'
@@ -124,50 +132,30 @@ You also have to maintain **all** price API-IDs (payment intervals) within one p
   ],
 ````
 
+## Test:
 
-````php
-'kreativ-anders.memberkit.secretKey'     => 'sk_test_xxxx',
-'kreativ-anders.memberkit.publicKey'     => 'pk_test_xxxx',
-'kreativ-anders.memberkit.webhookSecret' => 'whsec_xxx',
-'kreativ-anders.memberkit.stripeURLSlug' => 'stripe-checkout',
-'kreativ-anders.memberkit.successURL'    => 'https://*DOMAIN*/success',
-'kreativ-anders.memberkit.cancelURL'     => 'https://*DOMAIN*/cancel',
-'kreativ-anders.memberkit.tiers'         => [
-  [ 'name'  => 'Free'
-   ,'price' => null],
-  [ 'name'  => 'Basic'
-   ,'price' => 'price_xxxx'],
-  [ 'name'  => 'Premium'
-   ,'price' => ''],
-],
-````
+### Local
 
-
-### Testing
-
-For local testing start the stripe CLI and forward to your local machine:
+For local tests use the [Stripe CLI](https://stripe.com/docs/stripe-cli). There is also a very handy [Extension for VS Code](https://stripe.com/docs/stripe-vscode).
 
 ````bash
-C:\Path\to\stripe.exe listen --forward-to http://local.tld/*checkoutSlag*/webhook --forward-connect-to http://local.tld/*checkoutSlag*/webhook
+C:\Path\to\stripe.exe listen --forward-to http://YOUR-DOMAIN.TLD/stripe-checkout/webhook --forward-connect-to http://YOUR-DOMAIN.TLD/stripe-checkout/webhook
 ````
-Afterwards, the Terminal prompts line like this:
-"Ready! Your webhook signing secret is whsec_xxxx (^C to quit)"
+Afterwards, the (VS Code) terminal prompts a line like this "Ready! Your webhook signing secret is whsec_xxxx (^C to quit)".
 
-Maintain this code within your config.php:
-
-````php
-'kreativ-anders.memberkit.webhookSecret' => 'whsec_xxx',
-````
+**Maintain this code within your [config.php](#set-stripe-webhook-secret):**
 
 ### Going Live
 
 Head over to [Stripe´s Webhook Dashboard](https://dashboard.stripe.com/webhooks) and add a new endpoint for your application.
-The URL should look like "https://*YOUR_DOMAIN*.*TLD*/*CHECKOUTSLACK*/webhook".
+The URL should look like "https://YOUR-DOMAIN.TLD/stripe-checkout/webhook".
 Finally, add the following events that are handled by this Plug-In:
 
 - customer.subscription.updated
 - customer.subscription.deleted
 - customer.updated
+
+## Examples:
 
 ### Create stripe user
 
