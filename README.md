@@ -64,7 +64,7 @@ $ git submodule update --init --recursive
 ],
 ````
 
->The tier array need to be in an ordered sequence! => Lowest tier first and highest tier last.
+>The tier array need to be in an ordered sequence! => Lowest tier first and highest tier last. The tiers config is a 2D-array that needs to be ordererd hierarchical. The first index is always the entry/default tier after registration. Due to consistency the tier on index 0 holds a price, but it is never ever checked, so keep it null. All the following tiers need to be greater than the one before, e.g., FREE --> BASIC --> PREMIUM --> SUPER DELUXE etc.
 
 ### Create stripe user
 
