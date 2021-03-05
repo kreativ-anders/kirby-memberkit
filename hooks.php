@@ -88,7 +88,7 @@ return [
     // DETERMINE ROUTE PATH AS BEST AS POSSIBLE (TRUE = MATCH)
     $subscribe = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/subscribe/');
     $portal = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/portal');
-    $success = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/success');
+    $checkout = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/success');
     $cancel = Str::contains($path, Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/cancel/subscription');
 
     // CANCEL ROUTE IS DEBUG MODE EXCLUSIVE
@@ -98,7 +98,7 @@ return [
     }
 
     // REDIRECT TO HOMEPAGE WHEN USER IS NOT LOGGED-IN
-    if (($subscribe || $portal || $success || $cancel) && !kirby()->user()) {
+    if (($subscribe || $portal || $checkout || $cancel) && !kirby()->user()) {
       go();
     }
   }
