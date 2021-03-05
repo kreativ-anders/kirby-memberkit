@@ -10,8 +10,9 @@
 ## What do you get?
 A Kirby User Membership Plug-In (Pre-Release) powered by Stripe for Kirby CMS.
 
-**Functionality** | **Comment**
----- | ----
+**Trigger** | **Function** | **Kirby Logic** | **Comment**
+---- | ---- | ---- | ----
+A new kirby user has been created | Create Stripe user | Hooks - user.create:after | 
 Create Stripe User | Kirby User Hook 
 Subscribtion | Stripe Checkout
 Change Subscribtion | Stripe Billing Portal
