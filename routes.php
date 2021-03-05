@@ -12,7 +12,7 @@ return function ($kirby) {
     
     // CREATE STRIPE CHECKOUT SESSION
     [
-      // PATTERN --> CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
+      // PATTERN --> STRIPE SLUG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
       'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/subscribe/(:all)',
       'action' => function ($tier) {
 
@@ -57,7 +57,7 @@ return function ($kirby) {
     ],
     // CREATE STRIPE CUSTOMER PORTAL SESSION
     [
-      // PATTERN --> CHECKOUT SLAG / STRIPE PORTAL
+      // PATTERN --> STRIPE SLUG / STRIPE PORTAL
       'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/portal',
       'action' => function () {
 
@@ -89,7 +89,7 @@ return function ($kirby) {
     ],
     // CANCEL STRIPE SUBSCRIPTION
     [
-      // PATTERN --> CHECKOUT SLAG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
+      // PATTERN --> STRIPE SLUG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
       'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/cancel/subscription',
       'action' => function () {
 
@@ -122,7 +122,7 @@ return function ($kirby) {
     ],
     // UPDATE/MERGE USER AFTER (SUCCESSFUL) CHECKOUT
     [
-      // PATTERN --> CHECKOUT SLAG / success
+      // PATTERN --> STRIPE SLUG / success
       'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/success',
       'action' => function () {
 
@@ -142,7 +142,7 @@ return function ($kirby) {
     // https://stripe.com/docs/webhooks/integration-builder
     // --> NOT SECURED!!!
     [
-      // PATTERN --> CHECKOUT SLAG / ACTION NAME (update)
+      // PATTERN --> STRIPE SLUG / ACTION NAME (update)
       'pattern' => Str::lower(option('kreativ-anders.memberkit.stripeURLSlug')) . '/webhook',
       'action' => function () {
 

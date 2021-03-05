@@ -16,7 +16,7 @@ return [
       throw new Exception('No subscription to cancel!');
     }
 
-    // BUILD URL => CHECKOUT SLAG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
+    // BUILD URL => STRIPE SLUG / ACTION NAME (CANCEL) / TYPE NAME (SUBSCRIPTION)
     $url =  Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/cancel/subscription';   
 
@@ -25,7 +25,7 @@ return [
   // RETURN STRIPE WEBHOOK URL
   'getStripeWebhookURL' => function () {
 
-    // BUILD URL => CHECKOUT SLAG / ACTION NAME (WEBHOOK)
+    // BUILD URL => STRIPE SLUG / ACTION NAME (WEBHOOK)
     $url =  Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/webhook';
 
@@ -41,7 +41,7 @@ return [
       throw new Exception('Tier does not exist!');
     }
 
-    // BUILD URL => CHECKOUT SLAG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
+    // BUILD URL => STRIPE SLUG / ACTION NAME (SUBSCRIBE) / STRIPE TIER NAME
     $url  = Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/subscribe';
     $url .= '/' . rawurlencode(Str::lower(Str::trim(option('kreativ-anders.memberkit.tiers')[$tierIndex]['name'])));
@@ -51,7 +51,7 @@ return [
   // RETURN STRIPE CUSTOMER PORTAL URL
   'getStripePortalURL' => function () {
 
-    // CHECKOUT SLAG / STRIPE PORTAL
+    // STRIPE SLUG / STRIPE PORTAL
     $url  = Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/portal';
 
