@@ -12,7 +12,7 @@ A Kirby User Membership Plug-In (Pre-Release) powered by Stripe for Kirby CMS.
 
 **Function** | **Trigger** | **Kirby Logic** | **Comment**
 ---- | ---- | ---- | ----
-Create Stripe User | A new kirby user has been created. | Hooks - user.create:after | Save stripe customer id in kirby user and set root tier
+Create a stripe user | A new kirby user has been created | [Hooks](https://github.com/kreativ-anders/kirby-memberkit/blob/main/hooks.php) -> user.create:after | Save stripe customer id (*stripe_customer*) in kirby user and set subscription tier name (*tier*) to root tier ([Learn more about the tiers](#subscription-tiers))
 Subscribtion | Stripe Checkout
 Change Subscribtion | Stripe Billing Portal
 Cancel Subscribtion | Stripe Billing Portal
@@ -130,6 +130,8 @@ snippet('stripe-checkout-button', [ 'id'      => 'basic-checkout-button'
 ````
 
 > The snippet also includes the required JavaScript to initialize the checkout and redirect to Stripe itself.
+
+## Subscription Tiers
 
 ### Payment Intervals for subscriptions
 The payment interval depends on the price_id within stripe. In case you are creating a product with a price X with an interval of every 6 months stripe checkout will adapt to this - that´s pretty neat imho. This enables you to create mutliple payment intervals that look like the following in the config.php:
