@@ -51,7 +51,7 @@ return [
   // RETURN STRIPE CUSTOMER PORTAL URL
   'getStripePortalURL' => function () {
 
-    // STRIPE SLUG / STRIPE PORTAL
+    // BUILD URL => STRIPE SLUG / ACTION NAME (PORTAL)
     $url  = Str::lower(option('kreativ-anders.memberkit.stripeURLSlug'));
     $url .= '/portal';
 
@@ -59,6 +59,11 @@ return [
   },
   // RETRIEVE STRIPE CUSTOMER (WITH SUBSCRIPTIONS)
   'retrieveStripeCustomer' => function () {
+
+    if (!option('debug')) {
+
+      throw new Exception('Retrieve stripe customer is only available in debug mode!');
+    }
 
     $customer = null;
 
@@ -73,6 +78,7 @@ return [
     } catch(Exception $e) {
         
       // LOG ERROR SOMEWHERE !!!
+      throw new Exception('Retrieve stripe customer failed!');
     }
 
     return $customer;
