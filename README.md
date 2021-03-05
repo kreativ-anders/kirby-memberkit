@@ -1,24 +1,30 @@
 # Kirby Memberkit Plug-In (Pre-Release)
 
+* [What do you get?](#what-do-you-get)
+* [Why an Add-On?](#why-an-add-on)
+* [Installation](#installation)
+* [Notes](#notes)
+    * [Kirby CMS Licence](#kirby-cms-licence)
+* [Support](#support)  
 
 ## What do you get?
 A Kirby User Membership Plug-In (Pre-Release) powered by Stripe for Kirby CMS.
 
 **Functionality** | **Comment**
 ---- | ----
-Tiers| Endless
 Create Stripe User | Kirby User Hook 
 Subscribtion | Stripe Checkout
-Change Subscribtion | Not yet
-Cancel Subscribtion | Nope
+Change Subscribtion | Stripe Billing Portal
+Cancel Subscribtion | Stripe Billing Portal
+Tiers| Endless
+Pricing | Individual
 User Privileges | Kirby User Method
-Error Handling | under construction
 CSS | Nope
 Logic | Kirby Routes
 Felixibility | Hell yeah!
 
 #### Why no API?
-Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** what is imho not in your favor. So using routes is sofore the workaround for certain tasks. This alos applies to stripe webhooks. API calls to Kirby need to be authenticated which does not harmonize with stripe webhooks calls.
+Kirby API is very restrictive, which is good on one hand. But, on the other hand it requires the user to have **panel access** what is imho not in your favor. So using routes is sofore the workaround for certain tasks. This alss applies to stripe webhooks. API calls to Kirby need to be authenticated which does not harmonize with stripe webhooks calls.
 
 ## Installation:
 
@@ -46,15 +52,18 @@ $ git submodule update --init --recursive
 
 ## Get Started:
 
+>Get familiar with [Stripe Checkout](https://stripe.com/de/payments/checkout) and also check the respective Docs of [Stripe Checkout](https://stripe.com/docs/payments/checkout) and [Stripe Customer Portal](https://stripe.com/docs/billing/subscriptions/customer-portal) before heading on .
+
 ### Set configs
 
 ````php
-'kreativ-anders.stripekit.secretKey'    => 'sk_test_xxxx',
-'kreativ-anders.stripekit.publicKey'    => 'pk_test_xxxx',
-'kreativ-anders.stripekit.checkoutSlag' => 'stripe-checkout',
-'kreativ-anders.stripekit.successURL'   => 'https://*DOMAIN*/success',
-'kreativ-anders.stripekit.cancelURL'    => 'https://*DOMAIN*/cancel',
-'kreativ-anders.stripekit.tiers'        => [
+'kreativ-anders.stripekit.secretKey'     => 'sk_test_xxxx',
+'kreativ-anders.stripekit.publicKey'     => 'pk_test_xxxx',
+'kreativ-anders.stripekit.webhookSecret' => 'whsec_xxx',
+'kreativ-anders.stripekit.checkoutSlag'  => 'stripe-checkout',
+'kreativ-anders.stripekit.successURL'    => 'https://*DOMAIN*/success',
+'kreativ-anders.stripekit.cancelURL'     => 'https://*DOMAIN*/cancel',
+'kreativ-anders.stripekit.tiers'         => [
   [ 'name'  => 'Free'
    ,'price' => null],
   [ 'name'  => 'Basic'
@@ -65,6 +74,34 @@ $ git submodule update --init --recursive
 ````
 
 >The tier array need to be in an ordered sequence! => Lowest tier first and highest tier last. The tiers config is a 2D-array that needs to be ordererd hierarchical. The first index is always the entry/default tier after registration. Due to consistency the tier on index 0 holds a price, but it is never ever checked, so keep it null. All the following tiers need to be greater than the one before, e.g., FREE --> BASIC --> PREMIUM --> SUPER DELUXE etc.
+
+You have to maintain **all** price entries (intervals) within one product in your config.php file.
+
+### Testing
+
+For local testing start the stripe CLI and forward to your local machine:
+
+````bash
+C:\Path\to\stripe.exe listen --forward-to http://local.tld/*checkoutSlag*/webhook --forward-connect-to http://local.tld/*checkoutSlag*/webhook
+````
+Afterwards, the Terminal prompts line like this:
+"Ready! Your webhook signing secret is whsec_xxxx (^C to quit)"
+
+Maintain this code within your config.php:
+
+````php
+'kreativ-anders.stripekit.webhookSecret' => 'whsec_xxx',
+````
+
+### Going Live
+
+Head over to [Stripe´s Webhook Dashboard](https://dashboard.stripe.com/webhooks) and add a new endpoint for your application.
+The URL should look like "https://*YOUR_DOMAIN*.*TLD*/*CHECKOUTSLACK*/webhook".
+Finally, add the following events that are handled by this Plug-In:
+
+- customer.subscription.updated
+- customer.subscription.deleted
+- customer.updated
 
 ### Create stripe user
 
@@ -183,6 +220,10 @@ Use with caution and test before of course.
 
 *Go to https://getkirby.com/buy*
 
+## Disclaimer
+
+The source code is provided "as is" with no guarantee. Use it at your own risk and always test it yourself before using it in a production environment. If you find any issues, please create a new issue.
+
 ## Support
 
-In case this Add-On saved you some time and energy consider supporting kreativ-anders by purchasing the latest release on [Gumroad](https://gumroad.com/l/MFhDM), donating via [PayPal](https://paypal.me/kreativanders), or becoming a **GitHub Sponsor**.
+In case this Plug-In saved you some time and energy consider supporting kreativ-anders by donating via [PayPal](https://paypal.me/kreativanders), or becoming a **GitHub Sponsor**.
