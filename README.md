@@ -8,7 +8,7 @@
 * [Test](#test)
 * [Examples](#examples)
 * [Notes](#notes)
-    * [Kirby CMS Licence](#kirby-cms-licence)
+  * [Kirby CMS Licence](#kirby-cms-licence)
 * [Support](#support)  
 
 ## What do you get?
@@ -202,11 +202,11 @@ snippet('stripe-checkout-button', [ 'id'      => 'basic-checkout-button'
 
 ### Successful subscription checkout
 
-In case the stripe checkout was successful, stripe redirects to a hidden URL (captured via another route internally) that handles the user update procedure, e.g., payment status or set the subscribed tier name. Afterward, the redirect to **YOUR** individual succuss page ([set in config.php](#set-cancelsuccess-urls)) is triggered. In case the user return via cancel command on stripe checkout, the user will be immediately redirected to **YOUR** indiviudal cancel page (set in config as well).
+In case the stripe checkout was successful, stripe redirects to a hidden URL (captured via another route internally) that handles the user update procedure, e.g., payment status or set the subscribed tier name. Afterward, the redirect to **YOUR** individual succuss page ([set in config.php](#set-cancelsuccess-urls)) is triggered. In case the user return via cancel command on stripe checkout, the user will be immediately redirected to **YOUR** indiviudal cancel page (set in config.php as well).
 
 ### Manage stripe subscription
 
-Changes regarding payment interval, Subscription upgrades/downgrades, or even cancelation is all covered within the [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal). The only thing you have to do is showing the link to the portal somewhere somehow, for instance:
+Changes regarding payment interval, subscription upgrades/downgrades, or even cancelation is **all covered** within the [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal). The only thing you have to do is showing the link to the portal somewhere somehow:
 
 ````php
 $portal_url = $kirby->user()->getStripePortalURL();
@@ -222,7 +222,7 @@ echo kirbytext($portal);
 
 > Same! [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal) rules all of it!
 
-For debug purpose only it is possible to cancel a subscription by simply redirecting to a URL.
+For debug purpose only it is possible to cancel a subscription by simply redirecting to an URL.
 
 ````php
 $cancel_url = $kirby->user()->getStripeCancelURL();
@@ -276,6 +276,8 @@ For illustration we assume an user with the tier **Premium - Monthly** (Look at 
 
 ## Notes:
 This Plug-In is built for Kirby CMS based on **Kirby´s Starterkit v3.5.0** with the Add-On **[kirby-userkit](https://github.com/kreativ-anders/kirby-userkit)** for easy front end user creation.
+
+### Kirby CMS licence
 
 **Kirby CMS requires a dedicated licence:**
 
