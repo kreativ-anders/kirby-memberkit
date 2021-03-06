@@ -17,7 +17,7 @@ A versatile Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](http
 ## Function Overview:
 
 **Function** | **Trigger** | **Logic** | **Comment**
----- | ---- | ---- | ----
+:---- | :---- | :---- | :----
 Create stripe product(s) | Manual | [Stripe Products Dashboard](https://dashboard.stripe.com/products) | Here, you also add the prices inclusively the payment intervals (subscriptions), e.g. 1€/Month or 10€/Year. 
 Configure subscription tier(s) | Manual | [Kirby Options](https://getkirby.com/docs/guide/configuration#using-options) | Every price you create yield a distinct API-ID that is required in your kirby config.php. ([Learn more about subscription tiers](#set-subscription-tiers))
 Create stripe user(s) | Automatic | [Kirby Hooks](https://getkirby.com/docs/reference/system/options/hooks) | Creates a stripe customer and store the stripe customer id (*stripe_customer*) and the root subscription tier name (*tier*) in the kirby user information.
@@ -32,7 +32,7 @@ Keep everything in sync | Automatic | [Stripe Customer Portal](https://stripe.co
 ### Logic Index
 
 **Kirby Logic** | **Abstract** |  **Comment**
----- | ---- | ----
+:---- | :---- | :----
 Options | | Jump to [config.php in Get Started](#configphp) or check [options.php]((https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php))
 Hooks | [user.create:after](https://getkirby.com/docs/reference/plugins/hooks/user-create-after), [user.delete:after](https://getkirby.com/docs/reference/plugins/hooks/user-delete-after), [user.changeEmail:after](https://getkirby.com/docs/reference/plugins/hooks/user-changeemail-after), [route:before](https://getkirby.com/docs/reference/plugins/hooks/route-before)
 User methods | getStripeCancelURL(), getStripeWebhookURL(), getStripeCheckoutURL(), getStripePortalURL(), retrieveStripeCustomer(), mergeStripeCustomer(), isAllowed($tier) | Check [userMethods.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php)
