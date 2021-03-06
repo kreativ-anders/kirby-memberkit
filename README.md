@@ -33,7 +33,7 @@ Keep everything in sync | Automatic | [Stripe Customer Portal](https://stripe.co
 
 **Kirby Logic** | **Abstract** |  **Comment**
 :---- | :---- | :----
-Options | | Jump to [config.php in Get Started](#configphp) or check [options.php]((https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php))
+Options | | Jump to [config.php in Get Started](#configphp) or check [options.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php)
 Hooks | [user.create:after](https://getkirby.com/docs/reference/plugins/hooks/user-create-after), [user.delete:after](https://getkirby.com/docs/reference/plugins/hooks/user-delete-after), [user.changeEmail:after](https://getkirby.com/docs/reference/plugins/hooks/user-changeemail-after), [route:before](https://getkirby.com/docs/reference/plugins/hooks/route-before)
 User methods | getStripeCancelURL(), getStripeWebhookURL(), getStripeCheckoutURL(), getStripePortalURL(), retrieveStripeCustomer(), mergeStripeCustomer(), isAllowed($tier) | Check [userMethods.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php)
 Site methods | updateStripeSubscriptionWebhook($subscription), cancelStripeSubscriptionWebhook($subscription), updateStripeEmailWebhook($customer) | Check [siteMethods.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/siteMethods.php)
