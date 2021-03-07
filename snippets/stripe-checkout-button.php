@@ -2,6 +2,8 @@
 // CHECK KIRBY USER FOR SUBSCRIBTIONS
 if($kirby->user()->stripe_subscription()->isEmpty()): ?>
 
+<?= js('https://js.stripe.com/v3/'); ?>
+
 <button type="button" id="<?= $id ?>" class="<?= $classes ?>"><?= $text ?></button>
 
 <script type="text/javascript">
