@@ -23,7 +23,7 @@ Configure subscription tier(s) | Manual | [Kirby Options](https://getkirby.com/d
 Create stripe user(s) | Automatic | [Kirby Hooks](https://getkirby.com/docs/reference/system/options/hooks) | Creates a stripe customer and store the stripe customer id (*stripe_customer*) and the root subscription tier name (*tier*) in the Kirby user information.
 Update stripe user(s) email | Automatic | [Kirby Hooks](https://getkirby.com/docs/reference/system/options/hooks) | 
 Delete stripe user(s) | Automatic | [Kirby Hooks](https://getkirby.com/docs/reference/system/options/hooks) | The customer's billing information will be permanently removed from stripe and all current subscriptions will be immediately canceled. But processed payments and invoices associated with the customer will remain. 
-Subscribe user(s) | Manual/Automatic | [Kirby User methods](https://getkirby.com/docs/reference/plugins/extensions/user-methods), [Kirby Routes](https://getkirby.com/docs/guide/routing), [Kirby Snippets](https://getkirby.com/docs/guide/templates/snippets) | You can generate a distinct URL for a specific tier (with the corresponding payment interval) and pass it to the snippet which creates the checkout button. On click, the route generates a dedicated session and redirects to stripe checkout page. After successful checkout, an in-between route handles the merge of the stripe user with the Kirby user.
+Subscribe user(s) | Manual/Automatic | [Kirby User methods](https://getkirby.com/docs/reference/plugins/extensions/user-methods), [Kirby Routes](https://getkirby.com/docs/guide/routing), [Kirby Snippets](https://getkirby.com/docs/guide/templates/snippets) | You can generate a distinct URL for a specific tier (with the corresponding payment interval) and pass it to the snippet which creates the checkout button (The button also includes the required stripe JavaScript). On click, the route generates a dedicated session and redirects to stripe checkout page. After successful checkout, an in-between route handles the merge of the stripe user with the Kirby user.
 Manage user(s) subscription | Automatic | [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal), [Kirby User methods](https://getkirby.com/docs/reference/plugins/extensions/user-methods) | Actions that are allowed to be performed can be set in [Stripe Customer Portal Dashboard](https://dashboard.stripe.com/settings/billing/portal), e.g. payment interval or change email address. Most of the actions should be working, but do not activate the option to change the quantity at the moment.
 Check user(s) permission | Manual/Automatic | [Kirby User methods](https://getkirby.com/docs/reference/plugins/extensions/user-methods) | Compare the parameter ($tier) with the users' tier based on the index of the tiers config order.
 Cancel user(s) subscription | Automatic | [Stripe Customer Portal](https://stripe.com/blog/billing-customer-portal), [Kirby Routes](https://getkirby.com/docs/guide/routing), [Kirby User methods](https://getkirby.com/docs/reference/plugins/extensions/user-methods) | For debug purposes it is also possible to cancel a user subscription by redirecting to an URL (works only in debug mode). The best approach is to redirect the user to the stripe customer portal.
@@ -186,7 +186,7 @@ You can also call the method with a hardcoded string:
 $url = $kirby->user()->getStripeCheckoutURL('Premium'); // Premium tier
 ````
 
-> The URL is handled via route and returns a JSON with the required stripe session ID.
+> The URL is handled via a route and returns a JSON with the required stripe session ID.
 
 2. Add the stripe checkout button (via snippet):
 For styling or additional logic (with your JavaScript) you can pass an id, classes, and a text - whatever you want.
@@ -198,7 +198,9 @@ snippet('stripe-checkout-button', [ 'id'      => 'basic-checkout-button'
                                    ,'url'     => $url]);
 ````
 
-> The snippet also includes the required JavaScript to initialize the checkout and redirect to Stripe itself. Just be careful not to add the same id twice!
+The snippet also includes the required JavaScript to initialize the checkout and redirect to Stripe itself. 
+
+> Just be careful not to add the same id twice!
 
 ### Successful subscription checkout
 
