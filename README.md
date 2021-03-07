@@ -45,7 +45,7 @@ Kirby API is very restrictive, which is good on one hand. But, on the other hand
 ## Installation:
 
 ### Download
-1. Download the [latest release .zip-file (kirby-memberkit-vX.X.X.zip)](https://github.com/kreativ-anders/kirby-memberkit/releases).
+1. Download the [**latest release** .zip-file (_kirby-memberkit-vX.X.X.zip_)](https://github.com/kreativ-anders/kirby-memberkit/releases).
 1. Unzip the files.
 1. Paste inside _../site/plugins/_.
 1. Head over to **[Get Started](#get-started)**.
