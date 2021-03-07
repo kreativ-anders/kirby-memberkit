@@ -45,12 +45,12 @@ Kirby API is very restrictive, which is good on one hand. But, on the other hand
 ## Installation:
 
 ### Download
-1. Download the latest release.
+1. Download the [latest release .zip-file (kirby-memberkit-vX.X.X.zip)](https://github.com/kreativ-anders/kirby-memberkit/releases).
 1. Unzip the files.
 1. Paste inside _../site/plugins/_.
 1. Head over to **[Get Started](#get-started)**.
 
-### Git Submodule
+### Git Submodule (Recommended)
 You can add the Kirby Memberkit Plug-In as a git submodule as well:
 ````bash
 $ cd YOUR/PROJECT/ROOT
