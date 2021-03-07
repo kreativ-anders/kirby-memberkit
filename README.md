@@ -44,6 +44,8 @@ Kirby API is very restrictive, which is good on one hand. But, on the other hand
 
 ## Installation:
 
+> The assets/code you can download on GitHub does not include stripe´s PHP library (since it is a git submodule)! Either use the latest release download link below or install the Plug-In as a git submodule as well.
+
 ### Download
 1. Download the [**latest release** .zip-file (_kirby-memberkit-vX.X.X.zip_)](https://github.com/kreativ-anders/kirby-memberkit/releases).
 1. Unzip the files.
