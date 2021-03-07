@@ -12,7 +12,7 @@
 * [Support](#support)  
 
 ## What do you get?
-A versatile Kirby User Membership Plug-In (Pre-Release) powered by [Stripe](https://stripe.com/) for [Kirby CMS](https://getkirby.com).
+A versatile Kirby User Membership Plug-In powered by [Stripe](https://stripe.com/) ([Checkout](https://stripe.com/payments/checkout) + [Customer Portal](https://stripe.com/blog/billing-customer-portal)) for [Kirby CMS](https://getkirby.com).
 
 ## Function Overview:
 
