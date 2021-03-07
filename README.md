@@ -8,7 +8,7 @@
 * [Test](#test)
 * [Examples](#examples)
 * [Notes](#notes)
-  * [Kirby CMS Licence](#kirby-cms-licence)
+  * [Kirby CMS Licence](#kirby-cms-license)
 * [Support](#support)  
 
 ## What do you get?
