@@ -102,7 +102,7 @@ Those pages do not exist! You need to create them by yourself. This is a great o
 #### Set stripe webhook secret
 To keep everything (securely) in sync it is important to set a webhook secret. 
 ````php
-'kreativ-anders.memberkit.webhookSecret' => 'https://YOUR-DOMAIN.TLD/success',
+'kreativ-anders.memberkit.webhookSecret' => 'whsec_xxx',
 ````
 
 #### Set subscription tiers
