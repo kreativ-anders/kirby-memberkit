@@ -21,6 +21,7 @@ A versatile Kirby User Membership Plug-In powered by [Stripe](https://stripe.com
 Create stripe product(s) | Manual | [Stripe Products Dashboard](https://dashboard.stripe.com/products) | Here, you also add the prices inclusively the payment intervals (subscriptions), e.g. 1€/Month or 10€/Year. 
 Configure subscription tier(s) | Manual | [Kirby Options](https://getkirby.com/docs/guide/configuration#using-options) | Every price you create yield a distinct API-ID that is required in your kirby config.php. ([Learn more about subscription tiers](#set-subscription-tiers))
 Create stripe user(s) | Automatic | [Kirby Hooks](https://getkirby.com/docs/reference/system/options/hooks) | Creates a stripe customer and store the stripe customer id (*stripe_customer*) and the root subscription tier name (*tier*) in the Kirby user information.
+Migrate existing user(s) | Manual | [Kirby Users methods](https://getkirby.com/docs/reference/plugins/extensions/users-methods) | Only an admin can execute the migration.
 Update stripe user(s) email | Automatic | [Kirby Hooks](https://getkirby.com/docs/reference/system/options/hooks) | 
 Delete stripe user(s) | Automatic | [Kirby Hooks](https://getkirby.com/docs/reference/system/options/hooks) | The customer's billing information will be permanently removed from stripe and all current subscriptions will be immediately canceled. But processed payments and invoices associated with the customer will remain. 
 Subscribe user(s) | Manual/Automatic | [Kirby User methods](https://getkirby.com/docs/reference/plugins/extensions/user-methods), [Kirby Routes](https://getkirby.com/docs/guide/routing), [Kirby Snippets](https://getkirby.com/docs/guide/templates/snippets) | You can generate a distinct URL for a specific tier (with the corresponding payment interval) and pass it to the snippet which creates the checkout button (The button also includes the required stripe JavaScript). On click, the route generates a dedicated session and redirects to stripe checkout page. After successful checkout, an in-between route handles the merge of the stripe user with the Kirby user.
@@ -36,6 +37,7 @@ Keep everything in sync | Automatic | [Stripe Customer Portal](https://stripe.co
 Options | | Jump to [config.php in Get Started](#configphp) or check [options.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/options.php)
 Hooks | [user.create:after](https://getkirby.com/docs/reference/plugins/hooks/user-create-after), [user.delete:after](https://getkirby.com/docs/reference/plugins/hooks/user-delete-after), [user.changeEmail:after](https://getkirby.com/docs/reference/plugins/hooks/user-changeemail-after), [route:before](https://getkirby.com/docs/reference/plugins/hooks/route-before)
 User methods | getStripeCancelURL(), getStripeWebhookURL(), getStripeCheckoutURL(), getStripePortalURL(), retrieveStripeCustomer(), mergeStripeCustomer(), isAllowed($tier) | Check [userMethods.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/userMethods.php)
+Users methods | migrateStripeCustomers()| Check [usersMethods.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/usersMethods.php)
 Site methods | updateStripeSubscriptionWebhook($subscription), cancelStripeSubscriptionWebhook($subscription), updateStripeEmailWebhook($customer) | Check [siteMethods.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/siteMethods.php)
 Routes | | Check [routes.php](https://github.com/kreativ-anders/kirby-memberkit/blob/main/routes.php) 
 
@@ -170,6 +172,14 @@ Finally, add the following events that are handled by this Plug-In:
 - customer.updated
 
 ## Examples:
+
+### Migrate existing users
+
+Call the dedicated users method once somewhere, e.g. snippet:
+
+````php
+var_dump($kirby->users()->migrateStripeCustomers()); // TO SEE THE NUMBER OF MIGRATIONS
+````
 
 ### Create a stripe user
 
