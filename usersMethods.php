@@ -50,7 +50,6 @@ return [
     }     
 
     return [
-
       'users'       => count($users),
       'migrations'  => $counter
     ];
