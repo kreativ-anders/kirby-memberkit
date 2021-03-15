@@ -191,7 +191,7 @@ The logic applies to users' email changes and user deletion as well.
 1. Create a URL for a dedicated tier:
 
 ````php
-$url = $kirby->user()->getStripeCheckoutURL(option('kreativ-anders.memberkit.tiers')[1]); // Basic tier
+$url = $kirby->user()->getStripeCheckoutURL(option('kreativ-anders.memberkit.tiers')[1]['name']); // Basic tier
 ````
 You can also call the method with a hardcoded string:
 ````php
