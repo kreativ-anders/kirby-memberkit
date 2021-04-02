@@ -63,9 +63,10 @@ $ git submodule update --init --recursive
 $ git commit -am "Add Kirby Memberkit"
 ````
 Run these commands to update the Plug-In (and all other submodules):
+> **main** not "master"!
 ````bash
 $ cd YOUR/PROJECT/ROOT
-$ git submodule foreach git checkout master
+$ git submodule foreach git checkout main
 $ git submodule foreach git pull
 $ git commit -am "Update submodules"
 $ git submodule update --init --recursive
