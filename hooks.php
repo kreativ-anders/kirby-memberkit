@@ -30,7 +30,7 @@ return [
     try {
 
       // UPDATE KIRBY USER - ROOT TIER (INDEX=0)
-      $user->update([
+      kirby()->user($user->email())->update([
         'stripe_customer' => $customer->id,
         'tier' => option('kreativ-anders.memberkit.tiers')[0]['name']
       ]);
