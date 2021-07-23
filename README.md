@@ -182,6 +182,8 @@ Call the dedicated users method once somewhere, e.g. snippet:
 var_dump($kirby->users()->migrateStripeCustomers()); // TO SEE THE NUMBER OF MIGRATIONS
 ````
 
+> For every kirby user, a stripe user will be created, so (personal) information is shared with stripe, e.g. email address.
+
 ### Create a stripe user
 
 Stripe users are created automatically via hook after a successful user creation/registration. Check out the [Kirby Add-on Userkit](https://github.com/kreativ-anders/kirby-userkit) to allow self-registration and updates to kirby users.
