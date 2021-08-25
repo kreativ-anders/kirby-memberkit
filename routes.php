@@ -225,6 +225,18 @@ return function ($kirby) {
 
             break;
 
+          case 'invoice.payment_failed':
+            $subscription = $event->data->object;
+
+            // DURING CHECKOUT PROCEDURE:
+            // NOTHING TO DO SINCE NOTHING WILL BE CHANGED REGARDING THE CUSTOMER STATUS
+
+            // AFTER SUCCESSFUL CHECHOUT PROCEDURE:     
+            // UPDATE STRIPE SUBSCRIPTION FOR USER X (STATUS BECOMES 'past_due')
+            kirby()->site()->updateStripeSubscriptionWebhook($subscription);  
+
+            break;
+
           default:
 
             throw new Exception('Received unknown stripe event type!');

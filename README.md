@@ -171,6 +171,7 @@ Finally, add the following events that are handled by this Plug-In:
 - customer.subscription.updated
 - customer.subscription.deleted
 - customer.updated
+- invoice.payment_failed
 
 ## Examples:
 
