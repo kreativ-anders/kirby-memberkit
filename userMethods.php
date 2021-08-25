@@ -73,7 +73,7 @@ return [
       // RETRIEVE STRIPE CUSTOMER
       $customer = $stripe->customers->retrieve(
         $this->stripe_customer(),
-        ['expand' => ['subscription']]
+        ['expand' => ['subscriptions']]
       );
 
     } catch(Exception $e) {
@@ -95,7 +95,7 @@ return [
       // RETRIEVE STRIPE CUSTOMER
       $customer = $stripe->customers->retrieve(
         $this->stripe_customer(),
-        ['expand' => ['subscription']]
+        ['expand' => ['subscriptions']]
       );
 
     } catch(Exception $e) {
