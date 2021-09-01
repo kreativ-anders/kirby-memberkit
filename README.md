@@ -1,3 +1,5 @@
+![kirby-memberkit](https://socialify.git.ci/kreativ-anders/kirby-memberkit/image?description=1&language=1&logo=https%3A%2F%2Fstatic-assets.kreativ-anders.de%2Flogo%2Fdark.svg&pattern=Brick%20Wall&theme=Light)
+
 # Kirby Memberkit Plug-In (Pre-Release)
 
 * [What do you get?](#what-do-you-get)
