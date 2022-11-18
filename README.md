@@ -157,6 +157,9 @@ You also have to maintain **all** price API-IDs (payment intervals) within one p
 
 For local tests use the [Stripe CLI](https://stripe.com/docs/stripe-cli). There is also a very handy [Extension for VS Code](https://stripe.com/docs/stripe-vscode) available.
 
+> **Note**
+> Use the following line of code to listen and forward stripe request to your local environment.
+
 ````shell
 C:/PATH/TO/stripe.exe listen --forward-to http://YOUR-DOMAIN.TLD/stripe-checkout/webhook --forward-connect-to http://YOUR-DOMAIN.TLD/stripe-checkout/webhook
 ````
