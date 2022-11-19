@@ -158,6 +158,12 @@ You also have to maintain **all** price API-IDs (payment intervals) within one p
 For local tests use the [Stripe CLI](https://stripe.com/docs/stripe-cli). There is also a very handy [Extension for VS Code](https://stripe.com/docs/stripe-vscode) available.
 
 > **Note**
+> Authenticate your Stripe CLI with your account. (Make sure you are logged in with your stripe account into the desired app in your default browser.)
+
+````shell
+C:/PATH/TO/stripe.exe login
+````
+
 > Use the following line of code to listen and forward stripe request to your local environment.
 
 ````shell
@@ -295,8 +301,51 @@ For illustration we assume an user with the tier **Premium - Monthly** (Look at 
 <?php endif ?>
 ````
 
+### Overall snippet
+
+Place this snippet somewhere in your template, e.g. intro.php.
+
+````php
+if ($kirby->user()) {
+
+  $checkout_url = $kirby->user()->getStripeCheckoutURL(option('kreativ-anders.memberkit.tiers')[1]['name']); // Basic Tier
+  $checkout = '(link: ' . $checkout_url . ' text: Stripe Checkout Callback-URL (Tier 1) = ' . $checkout_url . 'target: _blank)';
+  echo kirbytext($checkout);
+
+  echo "<br/>";
+  echo "Checkout Button (Tier 1) = ";
+
+  snippet('stripe-checkout-button', [ 'id'      => 'basic-checkout-button'
+                                   ,'classes' => ''
+                                   ,'text'    => 'Basic Checkout'
+                                   ,'url'     => $checkout_url]);
+
+  echo "<br/><br/>";
+  echo "Stripe Customer Subscription Debug = ";
+  echo "<pre>";
+
+  $customer = $kirby->user()->retrieveStripeCustomer();
+  $subscription = $customer->subscriptions['data'];
+  var_dump($subscription);
+
+  echo "</pre>";
+  echo "<br/>";  
+  
+  $portal_url = $kirby->user()->getStripePortalURL();
+  $portal = '(link: ' . $portal_url . ' text: Stripe Customer Portal URL = ' . $portal_url . ' target: _blank)';
+  echo kirbytext($portal);
+
+  echo "<br/>"; 
+
+  // $cancel_url = $kirby->user()->getStripeCancelURL();
+  // $cancel = '(link: ' . $cancel_url . ' text: Stripe Customer Subscription Cancel URL = ' . $cancel_url . ')';
+  // echo kirbytext($cancel);
+
+}
+````
+
 ## Notes:
-This Plug-In is built for Kirby CMS based on **Kirby´s Starterkit v3.5.0** with the Add-On **[kirby-userkit](https://github.com/kreativ-anders/kirby-userkit)** for easy front end user creation.
+This Plug-In is built for Kirby CMS based on **Kirby´s Starterkit v3.8.2** with the Add-On **[kirby-userkit](https://github.com/kreativ-anders/kirby-userkit)** and **Stripe API Version 2022-11-15**.
 
 ### Kirby CMS license
 
