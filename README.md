@@ -104,6 +104,8 @@ This setting is just an additional layer to create collision-free routes/URLs li
 #### Set cancel/success URLs
 Those pages do not exist! You need to create them by yourself. This is a great opportunity to welcome users after they successfully subscribed to a tier or show them help when they canceled the stripe checkout process.
 
+> Use absolute paths. There is no route checking against those URLs.
+
 ````php
 'kreativ-anders.memberkit.successURL'    => 'https://YOUR-DOMAIN.TLD/success',
 'kreativ-anders.memberkit.cancelURL'     => 'https://YOUR-DOMAIN.TLD/cancel',
