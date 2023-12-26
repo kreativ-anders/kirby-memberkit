@@ -1,6 +1,6 @@
 ![kirby-memberkit](https://socialify.git.ci/kreativ-anders/kirby-memberkit/image?description=1&language=1&logo=https%3A%2F%2Fstatic-assets.kreativ-anders.de%2Flogo%2Fdark.svg&pattern=Brick%20Wall&theme=Light)
 
-# Kirby Memberkit Template
+# Kirby Memberkit Plug-In
 
 * [What do you get?](#what-do-you-get)
 * [Functional Overview?](#function-overview)
@@ -14,7 +14,10 @@
 * [Support](#support)  
 
 ## What do you get?
-A versatile Kirby User Membership Template powered by [Stripe](https://stripe.com/) ([Checkout](https://stripe.com/payments/checkout) + [Customer Portal](https://stripe.com/blog/billing-customer-portal)) for [Kirby CMS](https://getkirby.com). This repository contains a git submodule which makes it working as a submodule itself more complex than it should be.
+A versatile Kirby User Membership Plug-In powered by [Stripe](https://stripe.com/) ([Checkout](https://stripe.com/payments/checkout) + [Customer Portal](https://stripe.com/blog/billing-customer-portal)) for [Kirby CMS](https://getkirby.com). 
+
+| :exclamation:  This repository contains a git submodule that makes it working as a submodule itself more complex than it should be when there are dependency updates |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
 ## Function Overview:
 
@@ -100,8 +103,6 @@ This setting is just an additional layer to create collision-free routes/URLs li
 ````
 #### Set cancel/success URLs
 Those pages do not exist! You need to create them by yourself. This is a great opportunity to welcome users after they successfully subscribed to a tier or show them help when they canceled the stripe checkout process.
-
-> use absolute paths here. Not really happy with the current solution btw.
 
 ````php
 'kreativ-anders.memberkit.successURL'    => 'https://YOUR-DOMAIN.TLD/success',
