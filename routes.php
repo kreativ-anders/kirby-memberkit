@@ -142,7 +142,7 @@ return function ($kirby) {
           // MERGE STRIPE USER WITH KIRBY USER
           kirby()->user()->mergeStripeCustomer();
 
-        } catch(Exception $e) { #sdf
+        } catch(Exception $e) {
         
           // LOG ERROR SOMEWHERE !!!
           throw new Exception('Could not merge stripe customer into kirby user!');
