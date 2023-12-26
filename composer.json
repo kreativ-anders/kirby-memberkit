@@ -1,0 +1,16 @@
+{
+  "name": "kreativ-anders/kirby-memberkit",
+  "description": "Kirby Memberkit - A versatile Kirby User Membership Plug-In powered by Stripe Subscriptions for Kirby CMS.",
+  "homepage:": "https://github.com/kreativ-anders/kirby-memberkit",
+  "license": "MIT",
+  "authors": [
+      {
+          "name": "kreativ-anders",
+          "email": "superwoman@example.com"
+      }
+  ],
+    "support": {
+      "docs": "https://github.com/kreativ-anders/kirby-memberkit/blob/main/README.md",
+      "source": "https://github.com/kreativ-anders/kirby-memberkit"
+    }
+}
