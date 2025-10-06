@@ -1,0 +1,65 @@
+name: Update Stripe Submodule
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'  # Monthly on 1st at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-stripe:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Configure Git (main + submodule)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          cd lib/stripe
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          cd -
+
+      - name: Get previous stripe tag
+        id: previous
+        run: |
+          cd lib/stripe
+          git fetch --tags
+          prev_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "prev_tag=$prev_tag" >> $GITHUB_OUTPUT
+
+      - name: Update stripe submodule
+        run: |
+          git submodule update --remote --checkout lib/stripe
+
+      - name: Get latest stripe tag after update
+        id: latest
+        run: |
+          cd lib/stripe
+          git fetch --tags
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          echo "latest_tag=$latest_tag" >> $GITHUB_OUTPUT
+
+      - name: Skip if no tag or no change
+        if: steps.latest.outputs.latest_tag == '' || steps.latest.outputs.latest_tag == steps.previous.outputs.prev_tag
+        run: |
+          echo "No new tag or tag unchanged — skipping PR creation."
+          exit 0
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: update stripe to ${{ steps.latest.outputs.latest_tag }}"
+          title: "Update stripe submodule to ${{ steps.latest.outputs.latest_tag }}"
+          body: |
+            This PR updates the `lib/stripe` submodule from **${{ steps.previous.outputs.prev_tag }}** to **${{ steps.latest.outputs.latest_tag }}**.
+
+            🔍 [View changes on GitHub](https://github.com/stripe/stripe-php/compare/${{ steps.previous.outputs.prev_tag }}...${{ steps.latest.outputs.latest_tag }})
+
+          branch: "update-stripe-submodule"
+          delete-branch: true
