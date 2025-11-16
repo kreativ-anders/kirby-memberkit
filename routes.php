@@ -34,7 +34,6 @@ return function ($kirby) {
           $checkout = $stripe->checkout->sessions->create([
             'success_url' => $successURL,
             'cancel_url' => option('kreativ-anders.memberkit.cancelURL'),
-            'payment_method_types' => ['card'],
             'allow_promotion_codes' => true,
             'line_items' => [
               [
