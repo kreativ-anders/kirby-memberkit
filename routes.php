@@ -52,7 +52,7 @@ return function ($kirby) {
         }     
 
         return [
-          'id' => $checkout->id
+          'url' => $checkout->url
         ];
       }
     ],
