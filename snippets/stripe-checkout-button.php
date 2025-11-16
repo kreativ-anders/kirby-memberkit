@@ -2,7 +2,7 @@
 // CHECK KIRBY USER FOR SUBSCRIBTIONS
 if($kirby->user()->stripe_subscription()->isEmpty()): ?>
 
-<?= js('https://js.stripe.com/v3/'); ?>
+<?= js('https://js.stripe.com/clover/stripe.js'); ?>
 
 <button type="button" id="<?= $id ?>" class="<?= $classes ?>"><?= $text ?></button>
 
@@ -12,6 +12,7 @@ if($kirby->user()->stripe_subscription()->isEmpty()): ?>
         
     var stripe = Stripe("<?= option('kreativ-anders.memberkit.publicKey') ?>");
     var checkoutButton = document.getElementById("<?= $id ?>");
+
     checkoutButton.addEventListener("click", function () {
       fetch("<?= $url ?>", {
         method: "GET",
@@ -20,7 +21,7 @@ if($kirby->user()->stripe_subscription()->isEmpty()): ?>
           return response.json();
         })
         .then(function (session) {
-          return stripe.redirectToCheckout({ sessionId: session.id });
+          return window.location.href = session.url;
         })
         .then(function (result) {
 
