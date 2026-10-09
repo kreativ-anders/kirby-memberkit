@@ -2,6 +2,11 @@
 
 # Kirby Memberkit Plug-In
 
+> [!WARNING]
+> **Development is on hold for now.**
+> This repository stays public and available, but it is not being actively developed at the moment. I am no longer happy with parts of the architecture, especially shipping [stripe-php](https://github.com/stripe/stripe-php) as a git submodule, which makes updates and using this plug-in as a dependency more complicated than it should be.
+> Feel free to use, fork or learn from it, but expect no new features and only sporadic updates. Issues and pull requests may not get a timely response.
+
 * [What do you get?](#what-do-you-get)
 * [Functional Overview?](#function-overview)
   * [Logic Index](#logic-index)
